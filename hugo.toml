@@ -1,0 +1,29 @@
+baseURL = 'https://leeozhang.com/'
+languageCode = 'zh-cn'
+title = '我的小世界'
+theme = 'PaperMod'
+
+# 启用分页
+paginate = 10
+
+# 启用 RSS
+[outputs]
+home = ['HTML', 'RSS', 'JSON']
+
+[params]
+[params.homeInfoParams]
+Title = "你好，欢迎来访我的小世界 👋"
+Content = "这里记录我的学习与思考。"
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/leeozhang"
+
+[params.fuseOpts]
+isCaseSensitive = false
+shouldSort = true
+location = 0
+distance = 1000
+threshold = 0.4
+minMatchCharLength = 0
+keys = ['title', 'permalink', 'summary', 'content']
