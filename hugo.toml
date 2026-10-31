@@ -4,7 +4,8 @@ title = '我的小世界'
 theme = 'PaperMod'
 
 # 启用分页
-paginate = 10
+[pagination]
+pagerSize = 10
 
 # 启用 RSS
 [outputs]
