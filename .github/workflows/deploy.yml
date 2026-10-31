@@ -1,4 +1,4 @@
-name: Deploy my small world to GitHub Pages
+name: Deploy my little world to GitHub Pages
 
 on:
   push:
