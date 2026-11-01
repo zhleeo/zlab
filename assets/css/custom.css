@@ -79,3 +79,8 @@
   padding: 1px 7px;
   border-radius: 999px;
 }
+
+.hero__avatar {
+  width: 110px !important;
+  height: 110px !important;
+}
