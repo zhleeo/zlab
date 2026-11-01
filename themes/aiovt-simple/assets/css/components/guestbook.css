@@ -1,0 +1,307 @@
+/* ── Guestbook / 留言 page ── */
+
+body.is-guestbook {
+  background: var(--color-bg);
+}
+
+body.is-guestbook #main {
+  padding-bottom: 3.5rem;
+}
+
+body.is-guestbook .hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body.is-guestbook .hero-bg::before {
+  display: none;
+}
+
+body.is-guestbook .hero-bg__glow,
+body.is-guestbook .hero-bg__ripples,
+body.is-guestbook .hero-bg__bokeh {
+  display: none;
+}
+
+body.is-guestbook #rain-canvas,
+body.is-guestbook .hero-bg__rain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.guestbook-page {
+  position: relative;
+  z-index: 1;
+  width: var(--page-content-width);
+  margin: 0 auto;
+}
+
+.guestbook-page__content {
+  position: relative;
+  z-index: 1;
+}
+
+.guestbook-intro {
+  margin-bottom: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
+.guestbook-intro p {
+  margin-bottom: 1em;
+}
+
+.guestbook-intro p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Panel shells ── */
+
+.guestbook-compose,
+.guestbook-messages,
+.guestbook-twikoo-panel {
+  padding: 1.35rem 1.5rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 4px 18px rgba(0, 0, 0, 0.035);
+}
+
+.guestbook-compose {
+  margin-bottom: 1rem;
+}
+
+.guestbook-compose__title,
+.guestbook-messages__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-heading);
+}
+
+.guestbook-compose__hint {
+  margin: 0 0 1.15rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+.guestbook-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 0.75rem;
+}
+
+.guestbook-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.guestbook-form__field--full {
+  grid-column: 1 / -1;
+}
+
+.guestbook-form__label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.guestbook-form__input,
+.guestbook-form__textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: 10px;
+  transition: border-color 0.2s var(--ease-smooth);
+}
+
+.guestbook-form__textarea {
+  resize: vertical;
+  min-height: 6.5rem;
+}
+
+.guestbook-form__input:focus,
+.guestbook-form__textarea:focus {
+  outline: none;
+  border-color: rgba(212, 115, 127, 0.45);
+}
+
+.guestbook-form__submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.5rem 1.15rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-input-border);
+  border-radius: 999px;
+  transition:
+    color 0.2s var(--ease-smooth),
+    border-color 0.2s var(--ease-smooth),
+    background 0.2s var(--ease-smooth);
+}
+
+.guestbook-form__submit:hover,
+.guestbook-form__submit:focus-visible {
+  color: var(--color-accent-rose);
+  border-color: rgba(212, 115, 127, 0.45);
+  background: rgba(212, 115, 127, 0.04);
+}
+
+/* ── Messages list ── */
+
+.guestbook-messages__list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.guestbook-messages__empty {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 2rem 0 1rem;
+}
+
+.guestbook-message {
+  display: flex;
+  gap: 0.85rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.45s var(--ease-smooth),
+    transform 0.45s var(--ease-smooth);
+  transition-delay: calc(var(--msg-index, 0) * 0.05s + 0.06s);
+}
+
+.guestbook-page.is-visible .guestbook-message {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.guestbook-message + .guestbook-message {
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.guestbook-message__avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  background: var(--msg-color, var(--color-accent-rose));
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.guestbook-message__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.guestbook-message__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin-bottom: 0.35rem;
+}
+
+.guestbook-message__name {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--color-heading);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-smooth);
+}
+
+a.guestbook-message__name:hover,
+a.guestbook-message__name:focus-visible {
+  color: var(--color-accent-rose);
+}
+
+.guestbook-message__time {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-light);
+}
+
+.guestbook-message__content {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+/* ── Twikoo panel shell ── */
+
+.guestbook-twikoo-panel {
+  --tk-reply-extend: 1.5rem;
+}
+
+.guestbook-twikoo-panel .guestbook-messages__title {
+  margin-bottom: 0.15rem;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 767px) {
+  body.is-guestbook #main {
+    padding-bottom: 2.5rem;
+  }
+
+  .guestbook-compose,
+  .guestbook-messages,
+  .guestbook-twikoo-panel {
+    padding: 1.15rem 1.15rem 1.25rem;
+    --tk-reply-extend: 1.15rem;
+  }
+
+  .guestbook-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guestbook-message {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

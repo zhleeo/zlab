@@ -1,0 +1,97 @@
+/* ── Home closing (below season timeline) ── */
+.home-closing {
+  display: none;
+  --hc-text: #3a3836;
+  --hc-line: #e8e4e0;
+  --hc-accent: #dfa0a0;
+
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.home-closing__head {
+  margin: 0 0 2.25rem;
+}
+
+.home-closing__season,
+.home-closing__welcome {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.4375rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  line-height: 1.3;
+  color: var(--hc-text);
+}
+
+.home-closing__season {
+  margin-bottom: 0.625rem;
+}
+
+.home-closing__panels {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  max-width: 16rem;
+  margin: 0 auto;
+}
+
+.home-closing__panel {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 0.625rem;
+}
+
+.home-closing__divider {
+  flex: 0 0 1px;
+  align-self: stretch;
+  width: 1px;
+  background: var(--hc-line);
+}
+
+.home-closing__panel-label {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  color: var(--hc-text);
+}
+
+.home-closing__panel-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.22s var(--ease-smooth);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.home-closing__panel-link:hover,
+.home-closing__panel-link:focus-visible {
+  color: var(--hc-accent);
+}
+
+/* ── Home (mobile + desktop) ── */
+body.is-home .home-closing {
+  display: block;
+  position: relative;
+  z-index: 5;
+  padding:
+    6rem
+    max(clamp(1.75rem, 8.5vw, 2.75rem), env(safe-area-inset-right, 0px))
+    2.5rem
+    max(clamp(1.75rem, 8.5vw, 2.75rem), env(safe-area-inset-left, 0px));
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  body.is-home.posts-view--orbit .home-closing {
+    display: none;
+  }
+
+  body.is-home.posts-view--timeline .home-closing {
+    background: transparent;
+  }
+}

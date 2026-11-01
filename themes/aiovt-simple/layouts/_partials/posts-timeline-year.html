@@ -1,0 +1,7 @@
+{{- $year := .year -}}
+<li class="posts-timeline__year{{ if .desktopHidden }} posts-timeline__year--desktop-hidden{{ end }}" aria-hidden="true">
+  <span class="posts-timeline__year-inner">
+    <span class="posts-timeline__year-label">{{ $year }}</span>
+    <span class="posts-timeline__year-line" aria-hidden="true"></span>
+  </span>
+</li>

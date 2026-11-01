@@ -1,0 +1,86 @@
+/* ── Performance: scroll & paint containment ── */
+
+.site-header {
+  contain: layout style;
+}
+
+.hero-bg {
+  contain: layout style paint;
+}
+
+#rain-canvas {
+  contain: strict;
+}
+
+#main {
+  contain: layout style;
+}
+
+/* Skip rendering off-screen list rows until near viewport */
+.posts-list-item,
+.tag-term-item,
+.archive-item,
+.thought-card,
+.friend-card,
+.guestbook-message {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 5rem;
+}
+
+.posts-timeline__item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 5rem;
+}
+
+.posts-timeline__year,
+.tag-term-year,
+.archive-year {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 2.5rem;
+}
+
+body.is-home .posts-timeline__item,
+body.is-home .posts-timeline__year,
+body.is-home .posts-timeline__header,
+body.is-home .home-closing,
+body.is-home .home-closing__head,
+body.is-home .home-closing__panel,
+body.is-home .site-footer {
+  content-visibility: visible;
+  contain-intrinsic-size: auto;
+}
+
+html:not(.is-site-ready) body.is-home .posts-timeline__item,
+html:not(.is-site-ready) body.is-home .posts-timeline__year,
+html:not(.is-site-ready) body.is-home .home-musings,
+html:not(.is-site-ready) body.is-home .home-musings__item,
+html:not(.is-site-ready) body.is-home .season-archive__block,
+html:not(.is-site-ready) body.is-home .home-closing,
+html:not(.is-site-ready) body.is-home .site-footer {
+  content-visibility: visible;
+  contain-intrinsic-size: auto;
+}
+
+/* Loader: promote only while active */
+html.is-site-loading .site-loader__orbit-tilt {
+  will-change: transform;
+}
+
+html.is-site-loading .site-loader__planet {
+  will-change: transform;
+}
+
+html:not(.is-site-loading) .site-loader__orbit-tilt {
+  will-change: auto;
+}
+
+/* Reduce scroll chaining jank on long pages */
+body:not(.orbit-scroll-locked):not(.is-search-open) {
+  overscroll-behavior-y: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-reveal.is-inview {
+    will-change: auto;
+  }
+}

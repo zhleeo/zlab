@@ -1,0 +1,265 @@
+/* ── Site-wide motion: scroll reveal, page entry, UI transitions ── */
+
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition:
+      background-color 0.45s var(--ease-smooth),
+      color 0.35s var(--ease-smooth);
+  }
+
+  /* Scroll-triggered reveal (JS adds .motion-reveal + .is-inview) */
+  .motion-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity var(--motion-normal) var(--motion-ease),
+      transform var(--motion-normal) var(--motion-ease);
+    transition-delay: calc(var(--motion-i, 0) * var(--motion-stagger));
+  }
+
+  .motion-reveal.is-inview {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Posts list page entry ── */
+  [data-posts-list] .posts-list-header,
+  [data-posts-list] .posts-list-toolbar,
+  [data-posts-list] .posts-list-pagination {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity var(--motion-normal) var(--motion-ease),
+      transform var(--motion-normal) var(--motion-ease);
+  }
+
+  [data-posts-list] .posts-list-item {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--motion-normal) var(--motion-ease),
+      transform var(--motion-normal) var(--motion-ease);
+    transition-delay: calc(var(--motion-i, 0) * var(--motion-stagger) + 0.06s);
+  }
+
+  [data-posts-list].is-visible .posts-list-header,
+  [data-posts-list].is-visible .posts-list-toolbar,
+  [data-posts-list].is-visible .posts-list-pagination,
+  [data-posts-list].is-visible .posts-list-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-posts-list].is-visible .posts-list-toolbar {
+    transition-delay: 0.08s;
+  }
+
+  [data-posts-list].is-visible .posts-list-pagination {
+    transition-delay: 0.12s;
+  }
+
+  .posts-list-tags__panel.is-open {
+    animation: motion-fade-up var(--motion-normal) var(--motion-ease) both;
+  }
+
+  /* ── Tag / category term page entry ── */
+  [data-tag-term] .tag-term-header,
+  [data-tags-index] .tags-index-header,
+  [data-tag-term] .tag-term-year,
+  [data-tag-term] .tag-term-item,
+  [data-tags-index] .tags-index-cloud__item {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--motion-normal) var(--motion-ease),
+      transform var(--motion-normal) var(--motion-ease);
+    transition-delay: calc(var(--motion-i, 0) * var(--motion-stagger) + 0.04s);
+  }
+
+  [data-tag-term].is-visible .tag-term-header,
+  [data-tags-index].is-visible .tags-index-header {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  [data-tag-term].is-visible .tag-term-year,
+  [data-tag-term].is-visible .tag-term-item,
+  [data-tags-index].is-visible .tags-index-cloud__item {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── About page entry ── */
+  .about-page .page-header,
+  .about-body,
+  .about-comments {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity var(--motion-normal) var(--motion-ease),
+      transform var(--motion-normal) var(--motion-ease);
+  }
+
+  .about-page.is-visible .page-header {
+    opacity: 1;
+    transform: none;
+  }
+
+  .about-page.is-visible .about-body {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.1s;
+  }
+
+  .about-page.is-visible .about-comments {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.18s;
+  }
+
+  /* ── Guestbook header / form (messages have their own stagger) ── */
+  .guestbook-page .guestbook-header,
+  .guestbook-page .guestbook-intro,
+  .guestbook-page .guestbook-form,
+  .guestbook-page .guestbook-twikoo-panel {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--motion-normal) var(--motion-ease),
+      transform var(--motion-normal) var(--motion-ease);
+  }
+
+  .guestbook-page.is-visible .guestbook-header {
+    opacity: 1;
+    transform: none;
+  }
+
+  .guestbook-page.is-visible .guestbook-intro {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.06s;
+  }
+
+  .guestbook-page.is-visible .guestbook-form,
+  .guestbook-page.is-visible .guestbook-twikoo-panel {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.12s;
+  }
+
+  /* ── Search modal ── */
+  body.is-search-open .site-search__backdrop {
+    animation: motion-fade-in var(--motion-fast) var(--motion-ease) both;
+  }
+
+  body.is-search-open .site-search__panel {
+    animation: motion-scale-in var(--motion-normal) var(--motion-ease) both;
+  }
+
+  .site-search__item {
+    animation: motion-fade-up var(--motion-fast) var(--motion-ease) both;
+    animation-delay: calc(var(--motion-i, 0) * 0.03s);
+  }
+
+  /* ── Mobile nav drawer ── */
+  .header-mobile__drawer:not([hidden]) {
+    animation: motion-drawer-in var(--motion-normal) var(--motion-ease) both;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    transition:
+      opacity var(--motion-slow) var(--motion-ease),
+      transform var(--motion-slow) var(--motion-ease);
+  }
+
+  .site-footer.motion-reveal:not(.is-inview) {
+    transform: translateY(18px);
+  }
+
+  /* ── Page header hover polish ── */
+  .page-header__title,
+  .posts-list-header__title {
+    transition: color 0.3s var(--ease-smooth);
+  }
+
+  .about-body,
+  .post-sheet {
+    transition:
+      border-color 0.35s var(--ease-smooth),
+      box-shadow 0.35s var(--ease-smooth);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    body.is-home .posts-timeline .motion-reveal,
+    body.is-home .posts-timeline__header.motion-reveal,
+    body.is-home .posts-timeline__year.motion-reveal,
+    body.is-home .posts-timeline__item.motion-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    body.is-home .motion-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+@keyframes motion-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes motion-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes motion-scale-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes motion-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

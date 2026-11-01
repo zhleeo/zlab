@@ -1,0 +1,26 @@
+{{- $cfg := site.Params.thoughts | default dict -}}
+{{- if ($cfg.comments | default true) -}}
+{{- $page := .Page -}}
+{{- $anchor := $page.File.ContentBaseName -}}
+{{- $twikooPath := or $page.RelPermalink (printf "/thoughts/%s/" $anchor) -}}
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooEnv := or $twikoo.envId $twikoo.envid -}}
+{{- if $twikooEnv -}}
+<section
+  class="thought-card__comments"
+  id="thought-comments-{{ $anchor }}"
+  aria-label="评论"
+  hidden
+>
+  <div
+    class="thought-card__comments-host guestbook-twikoo-host"
+    data-twikoo-env="{{ $twikooEnv }}"
+    data-twikoo-path="{{ $twikooPath }}"
+    data-twikoo-lang="{{ $twikoo.lang | default `zh-CN` }}"
+    data-twikoo-el="thought-twikoo-{{ $anchor }}"
+  >
+    <div id="thought-twikoo-{{ $anchor }}"></div>
+  </div>
+</section>
+{{- end -}}
+{{- end -}}

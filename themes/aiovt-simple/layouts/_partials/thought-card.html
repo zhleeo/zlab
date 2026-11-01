@@ -1,0 +1,76 @@
+{{- $page := .Page -}}
+{{- $author := .Author -}}
+{{- $i := .Index -}}
+{{- $type := $page.Params.type | default "text" -}}
+{{- $comments := $page.Params.comments | default 0 -}}
+{{- $media := $page.Params.media -}}
+
+<article
+  class="thought-card"
+  id="thought-{{ $page.File.ContentBaseName }}"
+  style="--card-index: {{ $i }}"
+  data-thought-card
+  data-date="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}"
+>
+  <div class="thought-card__deckle thought-card__deckle--top" aria-hidden="true"></div>
+  <div class="thought-card__body">
+    <header class="thought-card__head">
+      <span class="thought-card__author">{{ $author }}</span>
+      <time class="thought-card__time" datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}" data-relative-time></time>
+    </header>
+
+    {{- if and (eq $type "media") $media -}}
+      <a class="thought-media" href="{{ $media.url | default "#" }}"{{ if $media.url }} target="_blank" rel="noopener noreferrer"{{ end }}>
+        <div class="thought-media__info">
+          <p class="thought-media__kind">{{ $media.kind | default "Link" }} · {{ $media.year | default ($page.Date.Format "2006") }}</p>
+          <h2 class="thought-media__title">{{ $media.title | default $page.Title }}</h2>
+          {{- with $media.description -}}
+            <p class="thought-media__desc">{{ . }}</p>
+          {{- end -}}
+          <div class="thought-media__meta">
+            {{- with $media.rating -}}
+              <span class="thought-media__rating" aria-label="评分 {{ . }}">
+                <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="currentColor"><path d="M8 1.3l1.76 3.57 3.94.57-2.85 2.78.67 3.92L8 10.9l-3.52 1.85.67-3.92L2.3 5.44l3.94-.57L8 1.3z"/></svg>
+                {{ . }}
+              </span>
+            {{- end -}}
+            {{- with $media.tags -}}
+              <span class="thought-media__tags">{{ . }}</span>
+            {{- end -}}
+            {{- with $media.source -}}
+              <span class="thought-media__source">{{ . }}</span>
+            {{- end -}}
+          </div>
+        </div>
+        {{- with $media.image -}}
+          <div class="thought-media__cover">
+            <img src="{{ . | relURL }}" alt="" loading="lazy" decoding="async">
+          </div>
+        {{- end -}}
+      </a>
+    {{- else -}}
+      <div class="post-body">
+        {{ $page.Content }}
+        {{- with $page.Params.images -}}
+          {{ partial "thought-gallery.html" (dict "images" .) }}
+        {{- end -}}
+      </div>
+    {{- end -}}
+
+    <footer class="thought-card__foot">
+      <button
+        type="button"
+        class="thought-card__action"
+        aria-label="评论 {{ $comments }}"
+        data-thought-comment-trigger
+        data-target="thought-comments-{{ $page.File.ContentBaseName }}"
+      >
+        <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5h14v9H7l-4 3v-12z"/></svg>
+        <span>{{ $comments }}</span>
+      </button>
+    </footer>
+
+    {{ partial "thought-comments.html" (dict "Page" $page) }}
+  </div>
+  <div class="thought-card__deckle thought-card__deckle--bottom" aria-hidden="true"></div>
+</article>

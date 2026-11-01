@@ -1,0 +1,25 @@
+{{ define "main" }}
+{{- $about := site.Params.about -}}
+{{- $title := $about.title | default .Title -}}
+{{- $subtitle := $about.subtitle | default "很高兴在这里遇见你。" -}}
+
+<div class="about-page">
+  <div class="about-page__inner">
+    <div class="about-page__head page-header">
+      <p class="page-header__label">{{ $about.label | default "ABOUT" }}</p>
+      <h1 class="page-header__title">{{ $title }}</h1>
+      <p class="page-header__sub">{{ $subtitle }}</p>
+    </div>
+
+    <div class="about-body">
+      {{- if .Content }}
+      <div class="post-body">
+        {{ .Content }}
+      </div>
+      {{- end }}
+
+      {{ partial "about-comments.html" . }}
+    </div>
+  </div>
+</div>
+{{ end }}

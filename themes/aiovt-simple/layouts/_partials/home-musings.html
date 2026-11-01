@@ -1,0 +1,53 @@
+{{- $cfg := site.Params.home.musings | default dict -}}
+{{- if ($cfg.enabled | default true) -}}
+{{- $label := $cfg.label | default "MUSINGS" -}}
+{{- $title := $cfg.title | default "碎念" -}}
+{{- $limit := $cfg.limit | default 6 -}}
+{{- $items := where site.RegularPages "Section" "thoughts" -}}
+{{- $items = $items.ByDate.Reverse -}}
+{{- $items = first $limit $items -}}
+
+<section class="home-musings" data-home-musings aria-label="{{ $title }}">
+  <header class="home-musings__header">
+    <p class="home-musings__label">{{ $label }}</p>
+    <h2 class="home-musings__title">{{ $title }}</h2>
+  </header>
+
+  {{- if $items -}}
+  <ul class="home-musings__list">
+    {{- range $items -}}
+      {{- $type := .Params.type | default "text" -}}
+      {{- $media := .Params.media -}}
+      {{- $text := "" -}}
+      {{- if and (eq $type "media") $media -}}
+        {{- $mediaTitle := $media.title | default .Title -}}
+        {{- $text = printf "观看了「%s」" $mediaTitle -}}
+      {{- else -}}
+        {{- $plain := .Plain | strings.TrimSpace -}}
+        {{- if $plain -}}
+          {{- if gt (len $plain) 96 -}}
+            {{- $text = printf "「%s…」" (substr $plain 0 96) -}}
+          {{- else -}}
+            {{- $text = printf "「%s」" $plain -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if $text -}}
+      <li class="home-musings__item" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+        <div class="home-musings__content">
+          <p class="home-musings__text">{{ $text }}</p>
+          <time
+            class="home-musings__time"
+            datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+            data-relative-time
+          >{{ .Date.Format "2006-01-02" }}</time>
+        </div>
+      </li>
+      {{- end -}}
+    {{- end -}}
+  </ul>
+  {{- else -}}
+  <p class="home-musings__empty">暂无碎念</p>
+  {{- end -}}
+</section>
+{{- end -}}

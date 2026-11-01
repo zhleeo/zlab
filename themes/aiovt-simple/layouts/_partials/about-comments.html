@@ -1,0 +1,19 @@
+{{- $cfg := site.Params.about | default dict -}}
+{{- if ($cfg.comments | default true) -}}
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooEnv := or $twikoo.envId $twikoo.envid -}}
+{{- if $twikooEnv -}}
+<section class="about-comments guestbook-twikoo-panel" aria-labelledby="about-comments-title">
+  <h2 class="guestbook-messages__title" id="about-comments-title">{{ $cfg.comments_title | default "留言" }}</h2>
+  <div
+    id="about-twikoo-root"
+    class="guestbook-twikoo-host"
+    data-twikoo-env="{{ $twikooEnv }}"
+    data-twikoo-path="/about/"
+    data-twikoo-lang="{{ $twikoo.lang | default `zh-CN` }}"
+  >
+    <div id="about-twikoo"></div>
+  </div>
+</section>
+{{- end -}}
+{{- end -}}

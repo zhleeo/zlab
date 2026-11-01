@@ -1,0 +1,61 @@
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $pinned := sort (where $posts "Params.pinned" true) "Date" "desc" -}}
+{{- $regular := sort (where $posts "Params.pinned" "!=" true) "Date" "desc" -}}
+{{- $sorted := slice -}}
+{{- range $pinned }}{{- $sorted = $sorted | append . -}}{{- end -}}
+{{- range $regular }}{{- $sorted = $sorted | append . -}}{{- end -}}
+{{- $pageSize := 10 -}}
+{{- $desktopLimit := site.Params.home.desktop_timeline_limit | default 5 -}}
+{{- $initial := first $pageSize $sorted -}}
+{{- $rest := after $pageSize $sorted -}}
+{{- $moreItems := slice -}}
+{{- range $i, $p := $rest -}}
+  {{- $globalIdx := add $i $pageSize -}}
+  {{- $cats := $p.Params.categories | default slice -}}
+  {{- $catLabel := "文章" -}}
+  {{- if gt (len $cats) 0 -}}
+    {{- $catLabel = printf "文章 · %s" (delimit $cats " · ") -}}
+  {{- end -}}
+  {{- $moreItems = $moreItems | append (dict
+    "index" $globalIdx
+    "title" $p.Title
+    "url" $p.RelPermalink
+    "date" ($p.Date.Format "2006-01-02T15:04:05Z07:00")
+    "year" ($p.Date.Format "2006")
+    "category" $catLabel
+    "tags" ($p.Params.tags | default slice)
+  ) -}}
+{{- end -}}
+
+<section class="posts-timeline" id="posts-timeline" aria-label="近期笔墨">
+  <header class="posts-timeline__header">
+    <p class="posts-timeline__eyebrow">RECENT WRITING</p>
+    <h2 class="posts-timeline__title">近期笔墨</h2>
+  </header>
+
+  {{- if $sorted -}}
+  <ol class="posts-timeline__list" id="posts-timeline-list">
+    {{- $prevYear := "" -}}
+    {{- range $i, $p := $initial -}}
+      {{- $year := $p.Date.Format "2006" -}}
+      {{- if ne $year $prevYear -}}
+        {{ partial "posts-timeline-year.html" (dict "year" $year "desktopHidden" (ge $i $desktopLimit)) }}
+        {{- $prevYear = $year -}}
+      {{- end -}}
+      {{ partial "posts-timeline-item.html" (dict "post" $p "index" $i "desktopHidden" (ge $i $desktopLimit)) }}
+    {{- end -}}
+  </ol>
+  {{- if $rest -}}
+  <div class="posts-timeline__load" id="posts-timeline-load" aria-live="polite">
+    <button type="button" class="posts-timeline__expand" id="posts-timeline-expand">显示全部</button>
+    <p class="posts-timeline__loading" id="posts-timeline-loading" hidden>加载中…</p>
+    <p class="posts-timeline__end" id="posts-timeline-end" hidden>已显示全部文章</p>
+    <div class="posts-timeline__sentinel" id="posts-timeline-sentinel" aria-hidden="true" hidden></div>
+  </div>
+  <script type="application/json" id="posts-timeline-more">{{ $moreItems | jsonify }}</script>
+  {{- end -}}
+  {{ partial "head/timeline-js.html" . }}
+  {{- else -}}
+  <p class="posts-timeline__empty">暂无文章</p>
+  {{- end -}}
+</section>

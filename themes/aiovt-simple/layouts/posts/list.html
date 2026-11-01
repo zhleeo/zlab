@@ -1,0 +1,73 @@
+{{ define "main" }}
+{{- $label := site.Params.posts.label | default "BLOG" -}}
+{{- $title := site.Params.posts.title | default "文章" -}}
+{{- $perPage := site.Params.posts.per_page | default 10 -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $total := len $posts -}}
+{{- $pinned := where $posts "Params.pinned" true -}}
+{{- $pinned = sort $pinned "Date" "desc" -}}
+{{- $regular := where $posts "Params.pinned" "!=" true -}}
+{{- $regular = sort $regular "Date" "desc" -}}
+{{- $paginator := .Paginate $regular $perPage -}}
+
+<div class="posts-list-page" data-posts-list>
+  {{ partial "background.html" . }}
+
+  <div class="posts-list-layout">
+    <div class="posts-list-main">
+      <header class="posts-list-header page-header">
+        <p class="page-header__label">{{ $label }}</p>
+        <h1 class="page-header__title">{{ $title }}</h1>
+      </header>
+
+      {{- if eq $paginator.PageNumber 1 -}}
+        <div class="posts-list-items posts-list-items--pinned">
+          {{- range $pinned -}}
+            {{ partial "posts-list-item.html" (dict "Page" . "Pinned" true) }}
+          {{- end -}}
+        </div>
+      {{- end -}}
+
+      <div class="posts-list-toolbar">
+        <div class="posts-list-toolbar__row">
+          <span class="posts-list-toolbar__count">共 <em data-posts-count>{{ $total }}</em> 篇</span>
+          <div class="posts-list-toolbar__actions">
+            <button
+              type="button"
+              class="posts-list-tags__all"
+              data-posts-tags-toggle
+              aria-expanded="false"
+              aria-controls="posts-list-tags-panel"
+            >全部标签</button>
+            <div class="posts-list-toolbar__sort" role="group" aria-label="排序方式">
+              <button type="button" class="posts-list-sort is-active" data-sort="latest" aria-pressed="true">最新</button>
+              <button type="button" class="posts-list-sort" data-sort="oldest" aria-pressed="false">最早</button>
+            </div>
+          </div>
+        </div>
+        <div class="posts-list-tags__panel" id="posts-list-tags-panel" data-posts-tags-panel hidden>
+          <div class="posts-list-tags__cloud">
+            {{- range site.Taxonomies.tags.ByCount -}}
+              <a class="posts-list-tags__item" href="{{ "/tags/" | relLangURL }}{{ .Term | urlize }}/">
+                {{ .Term }} ({{ .Count }})
+              </a>
+            {{- end -}}
+          </div>
+        </div>
+      </div>
+
+      <div class="posts-list-items" id="posts-list-items">
+        {{- range $paginator.Pages -}}
+          {{ partial "posts-list-item.html" (dict "Page" .) }}
+        {{- else -}}
+          {{- if and (eq $paginator.PageNumber 1) (not $pinned) -}}
+            <p class="posts-list-empty">暂无文章</p>
+          {{- end -}}
+        {{- end -}}
+      </div>
+
+      {{ partial "posts-list-pagination.html" (dict "Paginator" $paginator) }}
+    </div>
+  </div>
+</div>
+{{ end }}

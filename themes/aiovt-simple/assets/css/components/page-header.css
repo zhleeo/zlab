@@ -1,0 +1,65 @@
+/* ── Shared page header label (posts-list style) ── */
+
+.page-header__label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b0b0b0;
+  margin: 0 0 0.4rem;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header__title,
+.posts-list-header__title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #111;
+  line-height: 1.1;
+}
+
+.page-header__sub {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+/* ── 404 ── */
+
+.not-found-page__inner {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 8vw, 4rem) clamp(1.25rem, 5vw, 2rem) 4rem;
+  text-align: center;
+}
+
+.not-found-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+  margin: 2rem 0 0;
+}
+
+.not-found-page__link {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-accent-rose);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-smooth);
+}
+
+.not-found-page__link:hover,
+.not-found-page__link:focus-visible {
+  color: var(--post-prose-accent-hover, #b85a66);
+}

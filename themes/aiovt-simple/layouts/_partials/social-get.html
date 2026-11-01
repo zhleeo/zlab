@@ -1,0 +1,9 @@
+{{- $name := .name -}}
+{{- $default := .default | default "" -}}
+{{- $link := $default -}}
+{{- range site.Params.social -}}
+  {{- if eq .name $name -}}
+    {{- $link = .link -}}
+  {{- end -}}
+{{- end -}}
+{{- return $link -}}

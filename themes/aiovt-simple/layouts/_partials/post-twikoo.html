@@ -1,0 +1,16 @@
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooEnv := or $twikoo.envId $twikoo.envid -}}
+{{- if $twikooEnv -}}
+  <div class="post-twikoo-panel">
+    <h2 class="post-twikoo-panel__title">评论</h2>
+    <div
+      id="post-twikoo-root"
+      class="guestbook-twikoo-host"
+      data-twikoo-env="{{ $twikooEnv }}"
+      data-twikoo-path="{{ .RelPermalink }}"
+      data-twikoo-lang="{{ $twikoo.lang | default `zh-CN` }}"
+    >
+      <div id="post-twikoo"></div>
+    </div>
+  </div>
+{{- end -}}

@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="not-found-page">
+  {{ partial "background.html" . }}
+
+  <div class="not-found-page__inner">
+    <header class="page-header">
+      <p class="page-header__label">404</p>
+      <h1 class="page-header__title">页面未找到</h1>
+      <p class="page-header__sub">你访问的链接可能已失效，或从未存在过。</p>
+    </header>
+
+    <p class="not-found-page__actions">
+      <a class="not-found-page__link" href="{{ "/" | relLangURL }}">返回首页</a>
+      <a class="not-found-page__link" href="{{ "/posts" | relLangURL }}">浏览文章</a>
+    </p>
+  </div>
+</div>
+{{ end }}

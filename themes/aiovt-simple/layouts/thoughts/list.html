@@ -1,0 +1,67 @@
+{{ define "main" }}
+{{- $title := site.Params.thoughts.title | default "动态" -}}
+{{- $subtitle := site.Params.thoughts.subtitle | default "感君倾耳。" -}}
+{{- $author := site.Params.profile.name | default site.Title -}}
+{{- $rss := site.Params.thoughts.rss | default (partial "social-get.html" (dict "name" "RSS" "default" "/index.xml")) -}}
+{{- $items := where site.RegularPages "Section" "thoughts" -}}
+{{- $items = $items.ByDate.Reverse -}}
+{{- $initialCount := site.Params.thoughts.initial_count | default 6 -}}
+{{- $loadBatch := site.Params.thoughts.load_batch | default 4 -}}
+{{- $initialItems := first $initialCount $items -}}
+{{- $restItems := after $initialCount $items -}}
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooVersion := $twikoo.version | default "1.7.13" -}}
+{{- $twikooCssCdn := $twikoo.cssCdn | default (printf "https://registry.npmmirror.com/twikoo/%s/files/dist/twikoo.css" $twikooVersion) -}}
+{{- $twikooCdn := $twikoo.cdn | default (printf "https://registry.npmmirror.com/twikoo/%s/files/dist/twikoo.nocss.js" $twikooVersion) -}}
+
+<div
+  class="thoughts-page is-visible"
+  data-thoughts
+  data-twikoo-css="{{ $twikooCssCdn }}"
+  data-twikoo-cdn="{{ $twikooCdn }}"
+>
+  {{ partial "background.html" . }}
+
+  <header class="posts-list-header page-header thoughts-header">
+    <p class="page-header__label">{{ site.Params.thoughts.label | default "MOMENTS" }}</p>
+    <h1 class="page-header__title">{{ $title }}</h1>
+    <div class="thoughts-header__sub-row">
+      <a class="thoughts-header__rss" href="{{ $rss | relURL }}" aria-label="订阅 RSS" rel="alternate" type="application/rss+xml">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="currentColor">
+          <path d="M3.5 4A1.5 1.5 0 0 0 2 5.5v9A1.5 1.5 0 0 0 3.5 16h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 16.5 4h-13zM4 6h12v8H4V6z"/>
+          <circle cx="6.2" cy="13.8" r="1.35"/>
+          <path d="M5 9.2a5.8 5.8 0 0 1 5.8 5.8h1.4A7.2 7.2 0 0 0 5 7.8v1.4z"/>
+          <path d="M5 6.4a8.6 8.6 0 0 1 8.6 8.6h1.4A10 10 0 0 0 5 5v1.4z"/>
+        </svg>
+      </a>
+      <p class="page-header__sub">{{ $subtitle }}</p>
+    </div>
+  </header>
+
+  <div class="thoughts-feed" id="thoughts-feed">
+    {{- range $i, $item := $initialItems -}}
+      {{ partial "thought-card.html" (dict "Page" $item "Author" $author "Index" $i) }}
+    {{- else -}}
+      <p class="thoughts-empty">暂无动态，稍后再来看看。</p>
+    {{- end -}}
+  </div>
+
+  {{- if $restItems -}}
+  <div class="thoughts-load" id="thoughts-load" aria-live="polite">
+    <p class="thoughts-load__status" id="thoughts-loading" hidden>加载中…</p>
+    <p class="thoughts-load__status" id="thoughts-end" hidden>已显示全部动态</p>
+    <div class="thoughts-load__sentinel" id="thoughts-sentinel" aria-hidden="true"></div>
+    {{- $chunkOpen := false -}}
+    {{- range $i, $item := $restItems -}}
+      {{- if eq (mod $i $loadBatch) 0 -}}
+        {{- if $chunkOpen -}}</template>{{- end -}}
+        <template class="thoughts-chunk">
+        {{- $chunkOpen = true -}}
+      {{- end -}}
+      {{ partial "thought-card.html" (dict "Page" $item "Author" $author "Index" (add $initialCount $i)) }}
+    {{- end -}}
+    {{- if $chunkOpen -}}</template>{{- end -}}
+  </div>
+  {{- end -}}
+</div>
+{{ end }}

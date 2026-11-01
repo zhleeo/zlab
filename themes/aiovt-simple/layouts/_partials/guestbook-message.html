@@ -1,0 +1,24 @@
+{{- $item := .Item -}}
+{{- $i := .Index -}}
+{{- $name := $item.name | default "访客" -}}
+{{- $content := $item.content | default "" -}}
+{{- $url := $item.url | default "" -}}
+{{- $color := $item.color | default "#d4737f" -}}
+{{- $date := $item.date | default "" -}}
+
+<li class="guestbook-message" style="--msg-index: {{ $i }}; --msg-color: {{ $color }};">
+  <div class="guestbook-message__avatar" aria-hidden="true">{{ substr $name 0 1 }}</div>
+  <div class="guestbook-message__body">
+    <header class="guestbook-message__head">
+      {{- if $url }}
+        <a class="guestbook-message__name" href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{ $name }}</a>
+      {{- else }}
+        <span class="guestbook-message__name">{{ $name }}</span>
+      {{- end }}
+      {{- with $date }}
+        <time class="guestbook-message__time" datetime="{{ . }}" data-relative-time>{{ . }}</time>
+      {{- end }}
+    </header>
+    <p class="guestbook-message__content">{{ $content }}</p>
+  </div>
+</li>

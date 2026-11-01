@@ -1,30 +1,154 @@
 baseURL = 'https://leeozhang.com/'
-languageCode = 'zh-cn'
-title = '我的小世界'
-theme = 'PaperMod'
+defaultContentLanguage = 'zh-cn'
+locale = 'zh-cn'
+timeZone = 'Asia/Shanghai'
+title = 'leeozhang'
+theme = 'aiovt-simple'
 
-# 启用分页
-[pagination]
-pagerSize = 10
-
-# 启用 RSS
 [outputs]
-home = ['HTML', 'RSS', 'JSON']
+  home = ['HTML', 'RSS', 'JSON']
 
 [params]
-[params.homeInfoParams]
-Title = "你好，欢迎来访我的小世界 👋"
-Content = "这里记录我的学习与思考。"
+  description = '生活 · 学习 · 日常 · 感悟'
 
-[[params.socialIcons]]
-name = "github"
-url = "https://github.com/leeozhang"
+  [params.profile]
+    avatar = '/img/avatar.svg'
+    greeting = '你好，我是'
+    name = 'leeozhang'
+    status = '☕'
+    status_text = '持续探索中...'
 
-[params.fuseOpts]
-isCaseSensitive = false
-shouldSort = true
-location = 0
-distance = 1000
-threshold = 0.4
-minMatchCharLength = 0
-keys = ['title', 'permalink', 'summary', 'content']
+  [params.hero]
+    [params.hero.tagline]
+      before = '用代码记录'
+      highlight = '成长'
+      middle = '用文字沉淀'
+      tag = '思考'
+
+  [params.stats]
+    enabled = true
+    start_date = '2024-01-01'
+
+  [params.footer]
+    copyright_name = 'leeozhang'
+
+  [params.hitokoto]
+    enabled = true
+    fallback = '一言加载失败，点击重试'
+    show_from = true
+    interval = 30
+    seen_max = 100
+
+  [params.loader]
+    enabled = true
+    min_duration = 300
+    max_duration = 6000
+
+  [params.post]
+    default_cover = '/img/default-post-cover.svg'
+
+  [params.home]
+    desktop_posts_view = 'orbit'
+
+    [params.home.closing]
+      enabled = true
+      welcome = '欢迎联系'
+      mark_label = '留言'
+      mark_url = '/guestbook'
+      subscribe_label = '订阅'
+      subscribe_url = '/index.xml'
+
+  [params.about]
+    label = 'ABOUT'
+    title = '关于'
+    subtitle = '很高兴在这里遇见你。'
+
+  [params.posts]
+    label = 'BLOG'
+    title = '文章'
+    per_page = 10
+
+  [params.search]
+    enabled = true
+    sections = ['posts']
+    placeholder = '搜索文章…'
+    hint = '输入关键词搜索，按 Ctrl+K 或 Esc 关闭'
+    empty = '没有找到相关内容'
+
+    [params.search.section_labels]
+      posts = '文章'
+
+  [params.archives]
+    label = 'ARCHIVES'
+    initial_count = 24
+    load_batch = 12
+
+[[params.social]]
+  name = 'GitHub'
+  link = 'https://github.com/leeozhang'
+  icon = 'ri:github-line'
+  color = '#6e5494'
+
+[[params.social]]
+  name = 'E-Mail'
+  link = 'mailto:zhleeo@163.com'
+  icon = 'ri:mail-line'
+  color = '#8E71C1'
+
+[[params.social]]
+  name = 'RSS'
+  link = '/index.xml'
+  icon = 'ri:rss-line'
+  color = 'orange'
+
+[[menus.main]]
+name = '首页'
+pageRef = '/'
+weight = 1
+
+[[menus.main]]
+name = '技术'
+url = '/categories/技术'
+weight = 2
+
+[[menus.main]]
+name = '算法'
+url = '/categories/算法'
+weight = 3
+
+[[menus.main]]
+name = 'AI'
+url = '/categories/AI'
+weight = 4
+
+[[menus.main]]
+name = '日常'
+url = '/categories/日常'
+weight = 5
+
+[[menus.main]]
+name = '归档'
+url = '/archives'
+weight = 6
+
+[[menus.main]]
+name = '关于'
+url = '/about'
+weight = 7
+
+[pagination]
+  pagerSize = 10
+  path = 'page'
+
+[minify]
+  minifyOutput = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = 'github'
+    lineNos = false
+    noClasses = false
+    tabWidth = 4

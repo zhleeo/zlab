@@ -1,0 +1,59 @@
+{{- if or (and .IsPage (eq .Section "posts")) (eq .Section "thoughts") -}}
+  {{ partial "head/post-js.html" . }}
+{{- end -}}
+
+{{- if and .IsSection (eq .Section "posts") -}}
+  {{ partial "head/posts-list-js.html" . }}
+{{- end -}}
+
+{{- if eq .Section "archives" -}}
+  {{ partial "head/archives-js.html" . }}
+{{- end -}}
+
+{{- if eq .Section "thoughts" -}}
+  {{ partial "head/thoughts-js.html" . }}
+{{- end -}}
+
+{{- if eq .Section "friends" -}}
+  {{ partial "head/friends-js.html" . }}
+{{- end -}}
+
+{{- if eq .Section "guestbook" -}}
+  {{ partial "head/guestbook-js.html" . }}
+{{- end -}}
+
+{{- if eq .Section "about" -}}
+  {{ partial "head/about-js.html" . }}
+{{- end -}}
+
+{{- if or
+  (and (eq .Kind "term") (eq .Data.Singular "tag"))
+  (and (eq .Kind "taxonomy") (eq .Data.Singular "tag"))
+  (and (eq .Kind "term") (eq .Data.Singular "category"))
+  (and (eq .Kind "taxonomy") (eq .Data.Singular "category"))
+-}}
+  {{ partial "head/tag-term-js.html" . }}
+{{- end -}}
+
+{{- $search := site.Params.search | default dict -}}
+{{- if ($search.enabled | default true) -}}
+  {{ partial "head/search-js.html" . }}
+{{- end -}}
+
+{{ partial "head/loader-js.html" . }}
+
+{{- with resources.Get "js/main.js" }}
+  {{- $opts := dict
+    "minify" (cond hugo.IsDevelopment false true)
+    "sourceMap" (cond hugo.IsDevelopment "linked" "none")
+  }}
+  {{- with . | js.Build $opts }}
+    {{- if hugo.IsDevelopment }}
+      <script src="{{ .RelPermalink }}" defer></script>
+    {{- else }}
+      {{- with . | fingerprint }}
+        <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous" defer></script>
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}

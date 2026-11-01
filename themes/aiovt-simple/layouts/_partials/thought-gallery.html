@@ -1,0 +1,31 @@
+{{- $images := .images -}}
+{{- $count := len $images -}}
+{{- if gt $count 0 -}}
+  {{- $layout := $count -}}
+  {{- if gt $count 9 -}}
+    {{- $layout = 9 -}}
+  {{- else if and (gt $count 6) (lt $count 9) -}}
+    {{- $layout = 9 -}}
+  {{- else if and (gt $count 4) (lt $count 6) -}}
+    {{- $layout = 6 -}}
+  {{- else if eq $count 3 -}}
+    {{- $layout = 4 -}}
+  {{- else if eq $count 5 -}}
+    {{- $layout = 6 -}}
+  {{- end -}}
+  <div class="thought-gallery thought-gallery--{{ $layout }}" data-count="{{ $count }}">
+    {{- range $i, $img := $images -}}
+      {{- if lt $i 9 -}}
+        {{- $src := $img -}}
+        {{- $alt := "" -}}
+        {{- if reflect.IsMap $img -}}
+          {{- $src = $img.src | default $img.url -}}
+          {{- $alt = $img.alt | default "" -}}
+        {{- end -}}
+        <figure class="thought-gallery__item">
+          <img src="{{ $src | relURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+        </figure>
+      {{- end -}}
+    {{- end -}}
+  </div>
+{{- end -}}

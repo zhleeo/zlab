@@ -1,0 +1,31 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
+
+<link rel="icon" href="{{ "favicon.png" | relURL }}" type="image/png">
+<link rel="apple-touch-icon" href="{{ "favicon.png" | relURL }}">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
+
+{{ partial "head/theme-init.html" . }}
+{{- $loader := site.Params.loader | default dict -}}
+{{- if and ($loader.enabled | default true) (site.Params.profile.avatar) -}}
+{{- $avatar := site.Params.profile.avatar -}}
+{{- $avatarURL := $avatar -}}
+{{- if not (or (hasPrefix $avatar "http://") (hasPrefix $avatar "https://") (hasPrefix $avatar "data:")) -}}
+  {{- $avatarURL = $avatar | relURL -}}
+{{- end -}}
+{{- if or (hasPrefix $avatarURL "http://") (hasPrefix $avatarURL "https://") -}}
+<link rel="preconnect" href="{{ (urls.Parse $avatarURL).Scheme }}://{{ (urls.Parse $avatarURL).Host }}" crossorigin>
+{{- end -}}
+<link rel="preload" as="image" href="{{ $avatarURL }}">
+{{- end -}}
+{{ partial "head/css.html" . }}
+{{- if or (and .IsPage (eq .Section "posts")) (eq .Section "guestbook") (eq .Section "friends") (eq .Section "about") -}}
+  {{ partial "head/twikoo-assets.html" . }}
+{{- end -}}

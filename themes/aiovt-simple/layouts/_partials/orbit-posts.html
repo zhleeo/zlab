@@ -1,0 +1,52 @@
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $pinned := sort (where $posts "Params.pinned" true) "Date" "desc" -}}
+{{- $regular := sort (where $posts "Params.pinned" "!=" true) "Date" "desc" -}}
+{{- $sorted := slice -}}
+{{- range $pinned }}{{- $sorted = $sorted | append . -}}{{- end -}}
+{{- range $regular }}{{- $sorted = $sorted | append . -}}{{- end -}}
+{{- $items := slice -}}
+{{- range $p := $sorted -}}
+  {{- $cats := $p.Params.categories | default slice -}}
+  {{- $items = $items | append (dict
+    "title" $p.Title
+    "slug" $p.RelPermalink
+    "date" ($p.Date.Format "2006-01-02")
+    "year" $p.Date.Year
+    "summary" ($p.Description | default $p.Summary | plainify | truncate 100)
+    "categories" $cats
+  ) -}}
+{{- end -}}
+
+<section class="orbit-section" id="orbit-section" aria-label="文章星系">
+  <div class="orbit-section__track" id="orbit-track">
+    <div class="orbit-section__pin" id="orbit-pin">
+      <div class="orbit-system" id="orbit-system">
+        <div class="orbit-system__fit" id="orbit-fit">
+          <div class="orbit-system__stage" id="orbit-stage">
+            <div class="orbit-system__sun" id="orbit-sun" aria-hidden="true">
+              <div class="orbit-system__sun-core orbit-sparkle orbit-sparkle--sun"></div>
+              <div class="orbit-system__sun-glow"></div>
+            </div>
+            <svg class="orbit-system__svg" id="orbit-svg" aria-hidden="true"></svg>
+            <div class="orbit-system__labels" id="orbit-labels"></div>
+            <div class="orbit-system__planets" id="orbit-planets"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="orbit-year-focus" id="orbit-year-focus" aria-hidden="true" hidden>
+        <svg class="orbit-year-focus__svg" id="orbit-focus-svg" aria-hidden="true"></svg>
+        <div class="orbit-year-focus__planets" id="orbit-focus-planets"></div>
+        <div class="orbit-year-focus__meta">
+          <p class="orbit-year-focus__year" id="orbit-focus-year"></p>
+          <p class="orbit-year-focus__count" id="orbit-focus-count"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__ORBIT_POSTS__ = {{ $items | jsonify }};
+  </script>
+  {{ partial "head/orbit-js.html" . }}
+</section>

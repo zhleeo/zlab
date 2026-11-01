@@ -1,0 +1,49 @@
+{{- $item := .Item -}}
+{{- $i := .Index -}}
+{{- $pinLast := .PinLast | default false -}}
+{{- $name := $item.name | default "未命名" -}}
+{{- $url := $item.url | default "#" -}}
+{{- $desc := $item.desc | default $item.description | default "" -}}
+{{- $avatar := $item.avatar -}}
+{{- $siteshot := $item.siteshot | default "" -}}
+{{- if $siteshot -}}
+  {{- if not (or (hasPrefix $siteshot "http://") (hasPrefix $siteshot "https://") (hasPrefix $siteshot "data:")) -}}
+    {{- $siteshot = $siteshot | relURL -}}
+  {{- end -}}
+{{- end -}}
+{{- $color := $item.color | default "#d4737f" -}}
+{{- $letter := $item.letter | default (substr $name 0 1) -}}
+
+<a
+  class="friend-card"
+  href="{{ $url }}"
+  target="_blank"
+  rel="noopener noreferrer"
+  style="--card-index: {{ $i }}"
+  {{- if $pinLast }} data-pin-last{{ end }}
+>
+  {{- if $siteshot }}
+  <span class="friend-card__shot">
+    <img src="{{ $siteshot }}" alt="" loading="lazy" decoding="async">
+  </span>
+  {{- end }}
+  <span class="friend-card__meta">
+    <span class="friend-card__avatar" style="--avatar-color: {{ $color }}">
+      {{- if $avatar -}}
+        {{- $avatarURL := $avatar -}}
+        {{- if not (or (hasPrefix $avatar "http://") (hasPrefix $avatar "https://") (hasPrefix $avatar "data:")) -}}
+          {{- $avatarURL = $avatar | relURL -}}
+        {{- end -}}
+        <img src="{{ $avatarURL }}" alt="" loading="lazy" decoding="async">
+      {{- else -}}
+        <span class="friend-card__letter" aria-hidden="true">{{ $letter }}</span>
+      {{- end -}}
+    </span>
+    <span class="friend-card__info">
+      <span class="friend-card__name">{{ $name }}</span>
+      {{- with $desc -}}
+        <span class="friend-card__desc">{{ . }}</span>
+      {{- end -}}
+    </span>
+  </span>
+</a>

@@ -1,0 +1,22 @@
+{{ define "main" }}
+{{- $cats := .Data.Terms.ByCount -}}
+
+<div class="tags-index-page" data-tags-index>
+  {{ partial "background.html" . }}
+
+  <header class="tags-index-header page-header">
+    <p class="page-header__label">CATEGORIES</p>
+    <h1 class="tags-index-header__title">全部分类</h1>
+    <p class="tags-index-header__sub">共 {{ len $cats }} 个分类</p>
+    <hr class="tags-index-header__rule">
+  </header>
+
+  <div class="tags-index-cloud">
+    {{- range $cats -}}
+      <a class="tags-index-cloud__item" href="{{ .Page.RelPermalink }}">
+        {{ .Term }}<span class="tags-index-cloud__count">({{ .Count }})</span>
+      </a>
+    {{- end -}}
+  </div>
+</div>
+{{ end }}

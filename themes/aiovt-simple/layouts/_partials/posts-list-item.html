@@ -1,0 +1,42 @@
+{{- $p := .Page | default . -}}
+{{- $pinned := .Pinned | default false -}}
+{{- $tags := $p.Params.tags | default slice -}}
+{{- $summary := $p.Description | default $p.Summary -}}
+{{- $tagLimit := 3 -}}
+{{- $extraTags := sub (len $tags) $tagLimit -}}
+{{- $search := printf "%s %s %s" $p.Title ($summary | plainify) (delimit $tags " ") -}}
+
+<article
+  class="posts-list-item{{ if $pinned }} posts-list-item--pinned{{ end }}"
+  {{- if not $pinned }}
+  data-posts-item
+  data-date="{{ $p.Date.Unix }}"
+  data-modified="{{ $p.Lastmod.Unix }}"
+  data-search="{{ $search | lower }}"
+  {{- end -}}
+>
+  <h2 class="posts-list-item__title">
+    <a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
+  </h2>
+  <a class="posts-list-item__link" href="{{ $p.RelPermalink }}">
+    {{- with $summary -}}
+      <p class="posts-list-item__excerpt">{{ . | plainify | truncate 160 }}</p>
+    {{- end -}}
+  </a>
+  <div class="posts-list-item__foot">
+    {{- if $pinned -}}
+      <span class="posts-list-item__badge">置顶</span>
+    {{- end -}}
+    <time class="posts-list-item__date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "01月02日" }}</time>
+    {{- if gt (len $tags) 0 -}}
+      <div class="posts-list-item__tags">
+        {{- range first $tagLimit $tags -}}
+          <a class="posts-list-item__tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+        {{- end -}}
+        {{- if gt $extraTags 0 -}}
+          <span class="posts-list-item__tag-more">+{{ $extraTags }}</span>
+        {{- end -}}
+      </div>
+    {{- end -}}
+  </div>
+</article>

@@ -1,0 +1,252 @@
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $now := now -}}
+{{- $nowMonth := $now.Month -}}
+{{- $nowYear := $now.Year -}}
+{{- $currentSeasonYear := $nowYear -}}
+{{- $currentSeason := "" -}}
+{{- if and (ge $nowMonth 3) (le $nowMonth 5) -}}
+  {{- $currentSeason = "春" -}}
+{{- else if and (ge $nowMonth 6) (le $nowMonth 8) -}}
+  {{- $currentSeason = "夏" -}}
+{{- else if and (ge $nowMonth 9) (le $nowMonth 11) -}}
+  {{- $currentSeason = "秋" -}}
+{{- else -}}
+  {{- $currentSeason = "冬" -}}
+  {{- if le $nowMonth 2 -}}
+    {{- $currentSeasonYear = sub $nowYear 1 -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $groups := dict -}}
+{{- range sort $posts "Date" "asc" -}}
+  {{- $month := .Date.Month -}}
+  {{- $year := .Date.Year -}}
+  {{- $seasonYear := $year -}}
+  {{- $season := "" -}}
+  {{- if and (ge $month 3) (le $month 5) -}}
+    {{- $season = "春" -}}
+  {{- else if and (ge $month 6) (le $month 8) -}}
+    {{- $season = "夏" -}}
+  {{- else if and (ge $month 9) (le $month 11) -}}
+    {{- $season = "秋" -}}
+  {{- else -}}
+    {{- $season = "冬" -}}
+    {{- if le $month 2 -}}
+      {{- $seasonYear = sub $year 1 -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $key := printf "%04d-%s" $seasonYear $season -}}
+  {{- $item := dict
+    "url" .RelPermalink
+    "title" .Title
+    "ts" .Date.Unix
+    "date" .Date
+  -}}
+  {{- $existing := index $groups $key | default slice -}}
+  {{- $groups = merge $groups (dict $key ($existing | append $item)) -}}
+{{- end -}}
+
+{{- $walkSeason := $currentSeason -}}
+{{- $walkYear := $currentSeasonYear -}}
+{{- $blocks := slice -}}
+{{- range $i := seq 4 -}}
+  {{- $key := printf "%04d-%s" $walkYear $walkSeason -}}
+  {{- $items := index $groups $key | default slice -}}
+  {{- $isCurrent := eq $i 1 -}}
+  {{- $seasonYear := $walkYear -}}
+  {{- $season := $walkSeason -}}
+
+  {{- $rangeStart := time (printf "%d-03-01T00:00:00+08:00" $seasonYear) -}}
+  {{- $rangeEnd := time (printf "%d-05-31T23:59:59+08:00" $seasonYear) -}}
+  {{- $yearLabel := printf "%d" $seasonYear -}}
+  {{- if eq $season "夏" -}}
+    {{- $rangeStart = time (printf "%d-06-01T00:00:00+08:00" $seasonYear) -}}
+    {{- $rangeEnd = time (printf "%d-08-31T23:59:59+08:00" $seasonYear) -}}
+  {{- else if eq $season "秋" -}}
+    {{- $rangeStart = time (printf "%d-09-01T00:00:00+08:00" $seasonYear) -}}
+    {{- $rangeEnd = time (printf "%d-11-30T23:59:59+08:00" $seasonYear) -}}
+  {{- else if eq $season "冬" -}}
+    {{- $rangeStart = time (printf "%d-12-01T00:00:00+08:00" $seasonYear) -}}
+    {{- $rangeEnd = time (printf "%d-02-28T23:59:59+08:00" (add $seasonYear 1)) -}}
+    {{- $yearLabel = printf "%d–%02d" $seasonYear (mod (add $seasonYear 1) 100) -}}
+  {{- end -}}
+  {{- if $isCurrent -}}
+    {{- $rangeEnd = $now -}}
+  {{- end -}}
+
+  {{- $dateLabel := $yearLabel -}}
+  {{- if $isCurrent -}}
+    {{- $dateLabel = printf "%d–今" $seasonYear -}}
+  {{- end -}}
+
+  {{- $spanSec := sub $rangeEnd.Unix $rangeStart.Unix -}}
+  {{- if lt $spanSec 1 -}}
+    {{- $spanSec = 1 -}}
+  {{- end -}}
+
+  {{- $blocks = $blocks | append (dict
+    "key" $key
+    "season" $season
+    "seasonYear" $seasonYear
+    "items" $items
+    "count" (len $items)
+    "isCurrent" $isCurrent
+    "yearLabel" $yearLabel
+    "dateLabel" $dateLabel
+    "rangeStartUnix" $rangeStart.Unix
+    "rangeEndUnix" $rangeEnd.Unix
+    "spanSec" $spanSec
+  ) -}}
+
+  {{- if eq $walkSeason "春" -}}
+    {{- $walkSeason = "冬" -}}
+    {{- $walkYear = sub $walkYear 1 -}}
+  {{- else if eq $walkSeason "夏" -}}
+    {{- $walkSeason = "春" -}}
+  {{- else if eq $walkSeason "秋" -}}
+    {{- $walkSeason = "夏" -}}
+  {{- else -}}
+    {{- $walkSeason = "秋" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $chronoBlocks := slice -}}
+{{- $blockCount := len $blocks -}}
+{{- range $i := seq 0 (sub $blockCount 1) -}}
+  {{- $chronoBlocks = $chronoBlocks | append (index $blocks (sub (sub $blockCount 1) $i)) -}}
+{{- end -}}
+
+{{- $globalStart := (index $chronoBlocks 0).rangeStartUnix -}}
+{{- $globalEnd := $now.Unix -}}
+{{- $globalSpan := sub $globalEnd $globalStart -}}
+{{- if lt $globalSpan 1 -}}
+  {{- $globalSpan = 1 -}}
+{{- end -}}
+
+<section class="season-archive" id="season-archive" aria-label="四时归档">
+  <header class="season-archive__header">
+    <h2 class="season-archive__title">笔耕不辍</h2>
+  </header>
+  <div class="season-archive__list season-archive__list--vertical">
+    {{- range $blocks -}}
+      {{- $key := .key -}}
+      {{- $season := .season -}}
+      {{- $items := .items -}}
+      {{- $count := .count -}}
+      {{- $isCurrent := .isCurrent -}}
+      {{- $dateLabel := .dateLabel -}}
+      {{- $spanSec := .spanSec -}}
+      {{- $rangeStart := .rangeStartUnix -}}
+
+      <article class="season-archive__block{{ if $isCurrent }} is-current{{ end }}" id="season-{{ $key }}">
+        <div class="season-archive__head">
+          <span class="season-archive__name">{{ $season }}</span>
+          <span class="season-archive__count">{{ $count }} 篇</span>
+        </div>
+        <div class="season-archive__axis" aria-hidden="true">
+          <span class="season-archive__line"></span>
+          <div class="season-archive__dots" role="list">
+            {{- range $items -}}
+              {{- $pos := div (mul (sub .ts $rangeStart) 1000) (mul $spanSec 10) -}}
+              {{- if lt $pos 4 -}}
+                {{- $pos = 4 -}}
+              {{- else if gt $pos 96 -}}
+                {{- $pos = 96 -}}
+              {{- end -}}
+              <a
+                class="season-archive__dot{{ if $isCurrent }} is-current{{ end }}"
+                role="listitem"
+                href="{{ .url }}"
+                style="left: {{ $pos }}%;"
+                aria-label="{{ .title }}"
+              >
+                <span class="season-archive__tip" role="tooltip">
+                  <span class="season-archive__tip-title">{{ .title }}</span>
+                  <time class="season-archive__tip-date" datetime="{{ .date.Format "2006-01-02" }}">{{ .date.Format "1" }}月</time>
+                </span>
+              </a>
+            {{- end -}}
+          </div>
+        </div>
+        <a class="season-archive__years-link" href="/archives/#season-{{ $key }}">
+          <span class="season-archive__years">{{ $dateLabel }}</span>
+        </a>
+      </article>
+    {{- end -}}
+  </div>
+
+  <div class="season-archive__inline" aria-label="四时时间轴">
+    <div class="season-archive__track">
+      <span class="season-archive__line season-archive__line--inline" aria-hidden="true"></span>
+      <div class="season-archive__markers" role="list">
+        {{- range $chronoBlocks -}}
+          {{- range .items -}}
+            {{- $pos := div (mul (sub .ts $globalStart) 100) $globalSpan -}}
+            {{- if lt $pos 2 -}}
+              {{- $pos = 2 -}}
+            {{- else if gt $pos 98 -}}
+              {{- $pos = 98 -}}
+            {{- end -}}
+            <a
+              class="season-archive__dot season-archive__dot--inline"
+              role="listitem"
+              href="{{ .url }}"
+              style="left: {{ $pos }}%;"
+              aria-label="{{ .title }}"
+            >
+              <span class="season-archive__tip" role="tooltip">
+                <span class="season-archive__tip-title">{{ .title }}</span>
+                <time class="season-archive__tip-date" datetime="{{ .date.Format "2006-01-02" }}">{{ .date.Format "1" }}月</time>
+              </span>
+            </a>
+          {{- end -}}
+        {{- end -}}
+        <span class="season-archive__now" aria-hidden="true">
+          <span class="season-archive__now-tick"></span>
+        </span>
+      </div>
+    </div>
+    <div class="season-archive__labels">
+      {{- range $chronoBlocks -}}
+        {{- if not .isCurrent -}}
+          {{- $key := .key -}}
+          {{- $season := .season -}}
+          {{- $centerTs := div (add .rangeStartUnix .rangeEndUnix) 2 -}}
+          {{- $centerPos := div (mul (sub $centerTs $globalStart) 100) $globalSpan -}}
+          {{- if lt $centerPos 6 -}}
+            {{- $centerPos = 6 -}}
+          {{- else if gt $centerPos 94 -}}
+            {{- $centerPos = 94 -}}
+          {{- end -}}
+          <a
+            class="season-archive__season-label"
+            href="/archives/#season-{{ $key }}"
+            style="left: {{ $centerPos }}%;"
+          >{{ $season }}</a>
+        {{- end -}}
+      {{- end -}}
+      <span class="season-archive__now-label">今</span>
+    </div>
+  </div>
+
+  {{- $latestPost := index (sort $posts "Date" "desc") 0 -}}
+  {{- if $latestPost -}}
+  <p class="season-archive__latest">
+    <a class="season-archive__latest-link" href="{{ $latestPost.RelPermalink }}">
+      <span class="season-archive__latest-label">近作</span><span class="season-archive__latest-dot" aria-hidden="true">·</span><span class="season-archive__latest-title">{{ $latestPost.Title }}</span>
+    </a>
+  </p>
+  {{- end -}}
+
+  {{- $yearStart := time (printf "%d-01-01T00:00:00+08:00" $nowYear) -}}
+  {{- $yearEnd := time (printf "%d-12-31T23:59:59+08:00" $nowYear) -}}
+  {{- $yearCount := 0 -}}
+  {{- range $posts -}}
+    {{- if and (ge .Date.Unix $yearStart.Unix) (le .Date.Unix $yearEnd.Unix) -}}
+      {{- $yearCount = add $yearCount 1 -}}
+    {{- end -}}
+  {{- end -}}
+  <p class="season-archive__more">
+    <span class="season-archive__more-meta">本年 {{ $yearCount }} 篇</span><span class="season-archive__more-dot" aria-hidden="true">·</span><a class="season-archive__more-link" href="{{ "/archives/" | relLangURL }}">翻阅完整时间线</a>
+  </p>
+</section>

@@ -1,0 +1,98 @@
+/* ── About / 关于 page ── */
+
+body.is-about {
+  background: var(--color-bg);
+  --page-content-max: 800px;
+  --page-content-width: min(var(--page-content-max), calc(100% - var(--page-content-inset)));
+}
+
+body.is-about #main {
+  padding-bottom: 3.5rem;
+}
+
+.about-page {
+  position: relative;
+  z-index: 1;
+  width: var(--page-content-width);
+  margin: 0 auto;
+}
+
+.about-page__inner {
+  position: relative;
+  z-index: 1;
+  --post-gutter: clamp(1.5rem, 4vw, 2.75rem);
+}
+
+.about-page__head {
+  padding-inline: var(--post-gutter);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Content shell (prose via .post-body) ── */
+
+.about-body {
+  --post-prose-accent: var(--color-accent-rose);
+  --post-prose-accent-hover: #b85a66;
+  --post-prose-accent-soft: rgba(212, 115, 127, 0.1);
+  --post-prose-accent-muted: rgba(212, 115, 127, 0.28);
+  --post-prose-surface: rgba(255, 243, 246, 0.72);
+  --post-prose-surface-alt: rgba(255, 245, 240, 0.88);
+  --post-prose-border: rgba(232, 145, 154, 0.24);
+  padding-inline: var(--post-gutter);
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.about-body .post-body {
+  padding: 0.5rem 0 2rem;
+}
+
+/* ── Comments ── */
+
+.about-comments {
+  padding: 2rem 0 0;
+  border-top: 1px solid #e8e8e6;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.about-comments .guestbook-messages__title {
+  margin: 0 0 0.65rem;
+}
+
+.about-comments .guestbook-twikoo-host {
+  margin-top: 0.35rem;
+  --tk-reply-extend: 0px;
+  max-width: 100%;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 767px) {
+  body.is-about {
+    --page-content-width: 100%;
+  }
+
+  body.is-about #main {
+    padding-bottom: 2.5rem;
+  }
+
+  .about-page__inner {
+    --post-gutter: 0;
+  }
+
+  .about-body .post-body {
+    font-size: 1rem;
+    padding-top: 0.35rem;
+  }
+
+  .about-body .post-body .post-table-scroll {
+    margin-left: calc(-1 * var(--post-gutter));
+    margin-right: calc(-1 * var(--post-gutter));
+    padding-inline: var(--post-gutter);
+    max-width: calc(100% + 2 * var(--post-gutter));
+    width: calc(100% + 2 * var(--post-gutter));
+  }
+}

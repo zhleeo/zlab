@@ -1,0 +1,878 @@
+/* ── Orbit Posts Section ── */
+.orbit-section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  background: transparent;
+  overflow: hidden;
+}
+
+.orbit-section__track {
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+.orbit-section--story-locked,
+.orbit-section--galaxy-locked {
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 768px) {
+  body.orbit-scroll-locked {
+    overscroll-behavior: none;
+  }
+}
+
+.orbit-section__pin {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  height: 100dvh;
+  overflow: visible;
+}
+
+/* ── Year focus (scroll story) ── */
+.orbit-year-focus {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.orbit-year-focus.is-active {
+  pointer-events: none;
+  filter: drop-shadow(0 0 22px rgba(232, 178, 188, 0.14));
+  transform: scale(var(--focus-exit-scale, 1));
+  transition:
+    opacity 0.85s var(--ease-smooth),
+    filter 0.85s var(--ease-smooth),
+    transform 0.85s var(--ease-smooth);
+}
+
+.orbit-year-focus.orbit-year-focus--leaving {
+  pointer-events: none;
+}
+
+.orbit-year-focus__planets .orbit-planet__body.orbit-sparkle {
+  --planet-size: 16px;
+}
+
+.orbit-year-focus__planets .orbit-planet--focus .orbit-planet__body.orbit-sparkle::before {
+  filter:
+    brightness(1.22)
+    contrast(1.04)
+    drop-shadow(0 0 2px var(--sparkle-glow-near, var(--orbit-light-glow-near)))
+    drop-shadow(0 0 6px var(--sparkle-glow-far, var(--orbit-light-glow-far)))
+    drop-shadow(0 0 10px var(--sparkle-halo, var(--orbit-light-halo)));
+}
+
+.orbit-year-focus__planets .orbit-planet__body.orbit-sparkle::after {
+  width: calc(var(--sparkle-span) * 4);
+  height: calc(var(--sparkle-span) * 4);
+  margin:
+    calc(var(--sparkle-span) * -2)
+    0
+    0
+    calc(var(--sparkle-span) * -2);
+  opacity: 0.42;
+}
+
+.orbit-year-focus__planets .orbit-planet--focus:hover .orbit-planet__body.orbit-sparkle::before,
+.orbit-year-focus__planets .orbit-planet--focus.is-hovered .orbit-planet__body.orbit-sparkle::before {
+  filter:
+    brightness(1.3)
+    contrast(1.06)
+    drop-shadow(0 0 3px var(--sparkle-glow-near, var(--orbit-light-glow-near)))
+    drop-shadow(0 0 8px var(--sparkle-glow-far, var(--orbit-light-glow-far)))
+    drop-shadow(0 0 14px var(--sparkle-halo, var(--orbit-light-halo)));
+}
+
+.orbit-year-focus__planets .orbit-planet--focus:hover .orbit-planet__body.orbit-sparkle::after,
+.orbit-year-focus__planets .orbit-planet--focus.is-hovered .orbit-planet__body.orbit-sparkle::after {
+  opacity: 0.55;
+  transform: scale(1.04);
+}
+
+.orbit-year-focus__planets .orbit-planet--focus:hover .orbit-planet__body,
+.orbit-year-focus__planets .orbit-planet--focus.is-hovered .orbit-planet__body {
+  transform: scale(1.22);
+}
+
+.orbit-year-focus__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.orbit-year-focus__svg ellipse.is-story-focus {
+  fill: none;
+  stroke-width: 1.35;
+  stroke: var(--orbit-story-ring-stroke);
+  filter: drop-shadow(0 0 10px rgba(232, 178, 188, 0.2))
+    drop-shadow(0 0 3px rgba(240, 198, 206, 0.16));
+  transition: stroke 0.55s var(--ease-smooth), opacity 0.85s var(--ease-smooth);
+}
+
+.orbit-year-focus__planets,
+.orbit-year-focus__svg {
+  transition: opacity 0.85s var(--ease-smooth);
+}
+
+.orbit-year-focus__planets {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orbit-year-focus__planets .orbit-planet {
+  pointer-events: auto;
+}
+
+.orbit-year-focus__meta {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orbit-year-focus__year {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  line-height: 1;
+  opacity: 0;
+  text-shadow:
+    0 0 20px rgba(232, 178, 188, 0.2),
+    0 0 6px rgba(240, 198, 206, 0.14);
+}
+
+.orbit-year-focus__year,
+.orbit-year-focus__count {
+  transition: opacity 0.85s var(--ease-smooth);
+}
+
+.orbit-year-focus__count {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  opacity: 0;
+}
+
+.orbit-system {
+  --orbit-story-dim: 0;
+  --orbit-story-blur: calc(var(--orbit-story-dim) * 8px);
+  --orbit-story-saturate: calc(1 - var(--orbit-story-dim) * 0.28);
+  --orbit-story-bright: calc(1 - var(--orbit-story-dim) * 0.4);
+  --orbit-galaxy-opacity: calc(1 - var(--orbit-story-dim) * 0.94);
+  --orbit-galaxy-scale: calc(1 - var(--orbit-story-dim) * 0.06);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+}
+
+html:not([data-theme="dark"]) .orbit-system {
+  --orbit-story-saturate: calc(1 - var(--orbit-story-dim) * 0.16);
+  --orbit-story-bright: calc(1 - var(--orbit-story-dim) * 0.22);
+}
+
+.orbit-system__fit {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: visible;
+  transform-origin: center center;
+  opacity: var(--orbit-galaxy-opacity);
+  transform: scale(var(--orbit-galaxy-scale));
+  transition:
+    opacity 0.72s var(--ease-smooth),
+    transform 0.72s var(--ease-smooth);
+}
+
+.orbit-system__svg,
+.orbit-system__sun,
+.orbit-system__labels {
+  filter: blur(var(--orbit-story-blur))
+    saturate(var(--orbit-story-saturate))
+    brightness(var(--orbit-story-bright));
+  transition: filter 0.62s var(--ease-smooth);
+}
+
+.orbit-system__planets {
+  filter: none;
+}
+
+.orbit-system .orbit-planet__body.orbit-sparkle {
+  filter: blur(var(--orbit-story-blur)) saturate(var(--orbit-story-saturate));
+  opacity: max(var(--orbit-story-bright), calc(1 - var(--orbit-story-dim) * 0.55));
+  transition: filter 0.62s var(--ease-smooth), opacity 0.62s var(--ease-smooth);
+}
+
+.orbit-system .orbit-planet.is-hovered .orbit-planet__body.orbit-sparkle,
+.orbit-system .orbit-planet:hover .orbit-planet__body.orbit-sparkle {
+  filter: none;
+  opacity: 1;
+}
+
+.orbit-system.orbit-system--entering {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.orbit-system.orbit-system--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.orbit-system__stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: top left;
+  overflow: visible;
+}
+
+.orbit-system__sun {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 2;
+  --sun-halo-primary: clamp(200px, 40vmin, 340px);
+  --sun-halo-secondary: clamp(132px, 28vmin, 220px);
+  --sun-glow-amber: rgba(255, 230, 190, 0.16);
+  --sun-glow-pink: rgba(255, 195, 205, 0.11);
+  --sun-glow-warm: rgba(255, 220, 180, 0.13);
+  --sun-halo-primary-opacity: 0.46;
+  --sun-halo-secondary-opacity: 0.3;
+  --sun-inner-glow-opacity: 0.58;
+  --sun-inner-glow-size: 48px;
+}
+
+.orbit-system__sun::before,
+.orbit-system__sun::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.orbit-system__sun::before {
+  width: var(--sun-halo-primary);
+  height: var(--sun-halo-primary);
+  margin:
+    calc(var(--sun-halo-primary) / -2)
+    0
+    0
+    calc(var(--sun-halo-primary) / -2);
+  z-index: -2;
+  background:
+    radial-gradient(circle at 40% 40%, var(--sun-glow-amber) 0%, transparent 50%),
+    radial-gradient(circle at 60% 50%, var(--sun-glow-pink) 0%, transparent 45%),
+    radial-gradient(circle at 50% 60%, var(--sun-glow-warm) 0%, transparent 55%);
+  filter: blur(32px);
+  opacity: var(--sun-halo-primary-opacity);
+  animation: orbit-sun-halo-breathe 8s ease-in-out infinite;
+}
+
+.orbit-system__sun::after {
+  width: var(--sun-halo-secondary);
+  height: var(--sun-halo-secondary);
+  margin:
+    calc(var(--sun-halo-secondary) / -2)
+    0
+    0
+    calc(var(--sun-halo-secondary) / -2);
+  z-index: -1;
+  background:
+    radial-gradient(circle at 45% 45%, var(--sun-glow-pink) 0%, transparent 50%),
+    radial-gradient(circle at 55% 55%, var(--sun-glow-warm) 0%, transparent 55%);
+  filter: blur(22px);
+  opacity: var(--sun-halo-secondary-opacity);
+  animation: orbit-sun-halo-secondary-breathe 10s ease-in-out infinite reverse;
+}
+
+/* ── Sparkle light points (shared) ── */
+.orbit-sparkle {
+  --sparkle-span: 6px;
+  position: absolute;
+  width: var(--sparkle-span);
+  height: var(--sparkle-span);
+  margin: calc(var(--sparkle-span) / -2) 0 0 calc(var(--sparkle-span) / -2);
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.orbit-sparkle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      var(--orbit-light-highlight) 0%,
+      var(--sparkle-mid, var(--orbit-light-mid)) 32%,
+      transparent 54%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 44%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 47%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 44%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 47%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      45deg,
+      transparent 46%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 49.5%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 50.5%,
+      transparent 54%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 46%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 49.5%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 50.5%,
+      transparent 54%
+    );
+  filter:
+    drop-shadow(0 0 1px var(--sparkle-glow-near, var(--orbit-light-glow-near)))
+    drop-shadow(0 0 4px var(--sparkle-glow-far, var(--orbit-light-glow-far)));
+  pointer-events: none;
+}
+
+.orbit-sparkle--sun {
+  --sparkle-span: 7px;
+}
+
+.orbit-sparkle--sun::before {
+  filter:
+    brightness(1.08)
+    contrast(1.02)
+    drop-shadow(0 0 2px var(--orbit-light-glow-near))
+    drop-shadow(0 0 5px color-mix(in srgb, var(--sun-glow-pink) 70%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--sun-glow-warm) 65%, transparent));
+}
+
+.orbit-system__sun-core {
+  position: relative;
+  z-index: 1;
+  animation: orbit-sun-pulse 8s ease-in-out infinite;
+}
+
+.orbit-system__sun-glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: var(--sun-inner-glow-size);
+  height: var(--sun-inner-glow-size);
+  margin:
+    calc(var(--sun-inner-glow-size) / -2)
+    0
+    0
+    calc(var(--sun-inner-glow-size) / -2);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 40% 40%, var(--sun-glow-amber) 0%, transparent 42%),
+    radial-gradient(circle at 60% 50%, var(--sun-glow-pink) 0%, transparent 40%),
+    radial-gradient(circle at 50% 60%, var(--sun-glow-warm) 0%, transparent 46%);
+  filter: blur(8px);
+  opacity: var(--sun-inner-glow-opacity);
+  animation: orbit-sun-pulse 8s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+@keyframes orbit-sun-halo-breathe {
+  0%, 100% {
+    opacity: calc(var(--sun-halo-primary-opacity) * 0.88);
+    transform: scale(1);
+  }
+  50% {
+    opacity: calc(var(--sun-halo-primary-opacity) * 1.08);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes orbit-sun-halo-secondary-breathe {
+  0%, 100% {
+    opacity: calc(var(--sun-halo-secondary-opacity) * 0.88);
+    transform: scale(1);
+  }
+  50% {
+    opacity: calc(var(--sun-halo-secondary-opacity) * 1.08);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes orbit-sun-pulse {
+  0%, 100% { opacity: 0.92; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes orbit-sun-halo-breathe-dark {
+  0%, 100% {
+    opacity: calc(var(--sun-halo-primary-opacity) * 0.9);
+    transform: scale(1);
+  }
+  50% {
+    opacity: calc(var(--sun-halo-primary-opacity) * 1.1);
+    transform: scale(1.04);
+  }
+}
+
+.orbit-system__svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.orbit-system__svg ellipse {
+  fill: none;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  filter:
+    drop-shadow(0 0 3px var(--orbit-ring-glow-near))
+    drop-shadow(0 0 8px var(--orbit-ring-glow-far));
+  transition:
+    stroke 0.4s var(--ease-smooth),
+    opacity 0.4s var(--ease-smooth),
+    filter 0.4s var(--ease-smooth);
+}
+
+.orbit-system__svg ellipse.is-dimmed {
+  opacity: 0.28;
+  filter:
+    drop-shadow(0 0 2px var(--orbit-ring-glow-near))
+    drop-shadow(0 0 5px var(--orbit-ring-glow-far));
+}
+
+.orbit-system__svg ellipse.is-focused {
+  stroke-width: 1.25;
+  filter:
+    drop-shadow(0 0 4px var(--orbit-ring-glow-focused-near))
+    drop-shadow(0 0 12px var(--orbit-ring-glow-focused-far));
+}
+
+.orbit-system__labels {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.orbit-system__labels {
+  display: none;
+}
+
+.orbit-system__planets {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  overflow: visible;
+}
+
+/* ── Planet ── */
+.orbit-planet {
+  --planet-hit: 32px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: 3;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.orbit-planet::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--planet-hit);
+  height: var(--planet-hit);
+  margin: calc(var(--planet-hit) / -2) 0 0 calc(var(--planet-hit) / -2);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.orbit-planet.is-dimmed {
+  opacity: 0.55;
+  transition: opacity 0.4s var(--ease-smooth);
+}
+
+.orbit-planet.is-focused {
+  opacity: 1;
+  z-index: 5;
+}
+
+.orbit-planet:hover,
+.orbit-planet.is-hovered {
+  z-index: 40;
+}
+
+.orbit-planet__body.orbit-sparkle {
+  --sparkle-span: var(--planet-size, 5.5px);
+  animation: orbit-planet-breathe var(--breathe-duration, 5s) ease-in-out infinite;
+  animation-delay: var(--breathe-delay, 0s);
+  transition: transform 0.35s var(--ease-smooth), filter 0.35s var(--ease-smooth);
+}
+
+.orbit-planet__body.orbit-sparkle::before {
+  background:
+    radial-gradient(
+      circle at center,
+      var(--orbit-light-highlight) 0%,
+      var(--orbit-light-highlight) 20%,
+      var(--sparkle-mid, var(--orbit-light-mid)) 44%,
+      transparent 60%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 36%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 44%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 56%,
+      transparent 64%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 36%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 44%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-far, var(--orbit-light-glow-far)) 56%,
+      transparent 64%
+    ),
+    linear-gradient(
+      45deg,
+      transparent 38%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 47%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 53%,
+      transparent 62%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 38%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 47%,
+      var(--orbit-light-highlight) 50%,
+      var(--sparkle-glow-near, var(--orbit-light-glow-near)) 53%,
+      transparent 62%
+    );
+  filter:
+    brightness(1.2)
+    contrast(1.06)
+    drop-shadow(0 0 1.5px var(--sparkle-glow-near, var(--orbit-light-glow-near)))
+    drop-shadow(0 0 4px var(--sparkle-glow-far, var(--orbit-light-glow-far)))
+    drop-shadow(0 0 8px var(--sparkle-halo, var(--orbit-light-halo)));
+}
+
+.orbit-planet__body.orbit-sparkle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: calc(var(--sparkle-span) * 4);
+  height: calc(var(--sparkle-span) * 4);
+  margin:
+    calc(var(--sparkle-span) * -2)
+    0
+    0
+    calc(var(--sparkle-span) * -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--sparkle-glow-near, var(--orbit-light-glow-near)) 55%, transparent) 0%,
+    color-mix(in srgb, var(--sparkle-glow-far, var(--orbit-light-glow-far)) 40%, transparent) 28%,
+    color-mix(in srgb, var(--sparkle-halo, var(--orbit-light-halo)) 28%, transparent) 50%,
+    transparent 68%
+  );
+  opacity: 0.38;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
+}
+
+.orbit-planet:hover .orbit-planet__body,
+.orbit-planet.is-hovered .orbit-planet__body {
+  animation-play-state: paused;
+  transform: scale(1.18);
+}
+
+.orbit-planet:hover .orbit-planet__body::before,
+.orbit-planet.is-hovered .orbit-planet__body::before {
+  filter:
+    brightness(1.28)
+    contrast(1.08)
+    drop-shadow(0 0 2px var(--sparkle-glow-near, var(--orbit-light-glow-near)))
+    drop-shadow(0 0 7px var(--sparkle-glow-far, var(--orbit-light-glow-far)))
+    drop-shadow(0 0 14px var(--sparkle-halo, var(--orbit-light-halo)));
+}
+
+.orbit-planet:hover .orbit-planet__body::after,
+.orbit-planet.is-hovered .orbit-planet__body::after {
+  opacity: 0.52;
+  transform: scale(1.04);
+}
+
+.orbit-planet__tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--planet-size, 5.5px) / 2 + 12px);
+  transform: translateX(-50%) translateY(6px);
+  min-width: 176px;
+  max-width: 240px;
+  padding: 12px 14px;
+  background: var(--orbit-tooltip-bg);
+  backdrop-filter: blur(10px) saturate(1.15);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  border: 1px solid var(--orbit-tooltip-border);
+  border-radius: 12px;
+  box-shadow: var(--orbit-tooltip-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s var(--ease-smooth), transform 0.28s var(--ease-smooth), visibility 0.28s;
+  pointer-events: none;
+  z-index: 2;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  isolation: isolate;
+}
+
+.orbit-planet:hover .orbit-planet__tooltip,
+.orbit-planet.is-hovered .orbit-planet__tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.orbit-planet__tooltip-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-bottom: 5px;
+  line-height: 1.45;
+}
+
+.orbit-planet__tooltip-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.orbit-planet__tooltip-summary {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.orbit-planet.orbit-planet--leaving {
+  z-index: 40 !important;
+  opacity: 1 !important;
+  transform: scale(2.4) !important;
+  transition:
+    opacity 0.35s var(--ease-smooth),
+    transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.orbit-planet.orbit-planet--leaving .orbit-planet__tooltip {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.orbit-planet.orbit-planet--leaving .orbit-planet__body.orbit-sparkle::before {
+  filter:
+    brightness(1.35)
+    contrast(1.06)
+    drop-shadow(0 0 4px var(--sparkle-glow-near, var(--orbit-light-glow-near)))
+    drop-shadow(0 0 12px var(--sparkle-glow-far, var(--orbit-light-glow-far)))
+    drop-shadow(0 0 22px var(--sparkle-halo, var(--orbit-light-halo)));
+}
+
+.orbit-planet.orbit-planet--dimmed {
+  opacity: 0.22;
+  transition: opacity 0.38s var(--ease-smooth);
+}
+
+.orbit-system.orbit-system--navigating,
+.orbit-year-focus.orbit-system--navigating {
+  transition: opacity 0.42s var(--ease-smooth);
+}
+
+.orbit-system.orbit-system--navigating .orbit-system__svg ellipse,
+.orbit-year-focus.orbit-system--navigating ellipse {
+  opacity: 0.28;
+  transition: opacity 0.4s var(--ease-smooth);
+}
+
+.orbit-system.orbit-system--navigating .orbit-system__sun-core,
+.orbit-system.orbit-system--navigating .orbit-system__sun-glow {
+  opacity: 0.55;
+  transition: opacity 0.4s var(--ease-smooth);
+}
+
+body.orbit-nav-lock {
+  overflow: hidden;
+}
+
+.orbit-nav-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  pointer-events: none;
+  background: var(--color-bg);
+  opacity: 0;
+  clip-path: circle(0px at var(--orbit-nav-x, 50%) var(--orbit-nav-y, 50%));
+  transition:
+    clip-path 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.28s var(--ease-smooth);
+}
+
+.orbit-nav-transition.is-active {
+  opacity: 1;
+  clip-path: circle(var(--orbit-nav-r, 150vmax) at var(--orbit-nav-x, 50%) var(--orbit-nav-y, 50%));
+}
+
+@keyframes orbit-planet-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.orbit-section__empty {
+  text-align: center;
+  padding: 120px 24px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ── Responsive ── */
+.orbit-system__scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.orbit-system__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .orbit-system {
+    padding: 0;
+  }
+
+  .orbit-planet__tooltip {
+    min-width: 140px;
+    max-width: 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-system {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .orbit-system__fit {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .orbit-system__svg,
+  .orbit-system__sun,
+  .orbit-system__labels,
+  .orbit-system .orbit-planet__body.orbit-sparkle {
+    filter: none;
+    transition: none;
+  }
+
+  .orbit-nav-transition {
+    display: none;
+  }
+
+  .orbit-planet.orbit-planet--leaving,
+  .orbit-planet.orbit-planet--dimmed {
+    opacity: 1;
+    transform: none !important;
+    transition: none;
+  }
+
+  .post.post--from-orbit {
+    filter: none;
+    transform: none;
+  }
+
+  .orbit-planet__body {
+    animation: none;
+  }
+
+  .orbit-system__sun-core,
+  .orbit-system__sun-glow,
+  .orbit-system__sun::before,
+  .orbit-system__sun::after {
+    animation: none;
+  }
+
+  .orbit-system__sun::before {
+    opacity: var(--sun-halo-primary-opacity);
+  }
+
+  .orbit-system__sun::after {
+    opacity: var(--sun-halo-secondary-opacity);
+  }
+}

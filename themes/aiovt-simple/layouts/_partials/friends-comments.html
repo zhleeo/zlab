@@ -1,0 +1,19 @@
+{{- $cfg := site.Params.friends | default dict -}}
+{{- if ($cfg.comments | default true) -}}
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooEnv := or $twikoo.envId $twikoo.envid -}}
+{{- if $twikooEnv -}}
+<section class="friends-comments guestbook-twikoo-panel" aria-labelledby="friends-comments-title">
+  <h2 class="guestbook-messages__title" id="friends-comments-title">{{ $cfg.comments_title | default "友链申请" }}</h2>
+  <div
+    id="friends-twikoo-root"
+    class="guestbook-twikoo-host"
+    data-twikoo-env="{{ $twikooEnv }}"
+    data-twikoo-path="/friends/"
+    data-twikoo-lang="{{ $twikoo.lang | default `zh-CN` }}"
+  >
+    <div id="friends-twikoo"></div>
+  </div>
+</section>
+{{- end -}}
+{{- end -}}

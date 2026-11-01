@@ -1,0 +1,635 @@
+/* Twikoo theme — scoped to host wrapper (Vue replaces #twikoo on mount) */
+
+.guestbook-twikoo-host {
+  --tk-accent: var(--color-accent-rose);
+  --tk-accent-hover: var(--color-accent);
+  --tk-accent-soft: rgba(212, 115, 127, 0.45);
+  --tk-accent-bg: rgba(212, 115, 127, 0.06);
+  --tk-border: var(--color-border);
+  --tk-border-light: var(--color-border-soft);
+  --tk-input-bg: var(--color-input-bg);
+  --tk-input-border: var(--color-input-border);
+  --tk-text: var(--color-text);
+  --tk-text-muted: var(--color-text-muted);
+  --tk-text-light: var(--color-text-light);
+  --tk-root-avatar: 2.5rem;
+  --tk-root-avatar-gap: 0.85rem;
+  --tk-reply-avatar: 1.75rem;
+  --tk-reply-avatar-gap: 0.4rem;
+  --tk-reply-indent: calc(var(--tk-root-avatar) + var(--tk-root-avatar-gap) - var(--tk-root-avatar) / 2);
+  --tk-reply-nest-indent: calc(var(--tk-reply-avatar) + var(--tk-reply-avatar-gap) - var(--tk-reply-avatar) / 2);
+  --tk-reply-extend: 0px;
+
+  min-height: 10rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: visible;
+  margin-top: 0.85rem;
+  font-family: "LXGW WenKai", "霞鹜文楷", serif;
+  color: var(--tk-text);
+  letter-spacing: 0.03em;
+}
+
+.guestbook-twikoo-host .twikoo {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments,
+.guestbook-twikoo-host .twikoo .tk-comments-container,
+.guestbook-twikoo-host .twikoo .tk-comment,
+.guestbook-twikoo-host .twikoo .tk-main,
+.guestbook-twikoo-host .twikoo .tk-col,
+.guestbook-twikoo-host .twikoo .tk-replies,
+.guestbook-twikoo-host .twikoo .tk-content {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.guestbook-twikoo-host .twikoo .tk-main {
+  flex: 1 1 0%;
+  width: 0;
+  min-width: 0;
+}
+
+/* ── Element UI ── */
+
+.guestbook-twikoo-host .twikoo .el-input__inner,
+.guestbook-twikoo-host .twikoo .el-textarea__inner {
+  color: var(--tk-text) !important;
+  background-color: var(--tk-input-bg) !important;
+  border: 1px solid var(--tk-input-border) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  font-family: "LXGW WenKai", "霞鹜文楷", serif !important;
+  font-size: 0.9375rem !important;
+  letter-spacing: 0.03em;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-input__inner {
+  height: auto !important;
+  line-height: 1.5 !important;
+  padding: 0.65rem 0.85rem !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-textarea__inner {
+  min-height: 6.5rem !important;
+  padding: 0.75rem 0.9rem !important;
+  line-height: 1.75 !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-input__inner:hover,
+.guestbook-twikoo-host .twikoo .el-textarea__inner:hover {
+  border-color: var(--tk-accent-soft) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-input__inner:focus,
+.guestbook-twikoo-host .twikoo .el-textarea__inner:focus {
+  border-color: var(--tk-accent-soft) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-input-group__prepend {
+  color: var(--tk-text-muted) !important;
+  background-color: var(--tk-input-bg) !important;
+  border: 1px solid var(--tk-input-border) !important;
+  border-right: none !important;
+  font-family: "LXGW WenKai", "霞鹜文楷", serif !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.04em;
+  padding: 0 0.85rem !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-input-group--prepend .el-input__inner {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-input-group--prepend .el-input-group__prepend {
+  border-radius: 10px 0 0 10px !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-textarea .el-input__count {
+  color: var(--tk-text-light) !important;
+  background: transparent !important;
+  font-size: 0.6875rem !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button {
+  font-family: "LXGW WenKai", "霞鹜文楷", serif !important;
+  font-size: 0.8125rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em;
+  border-radius: 999px !important;
+  padding: 0.45rem 1rem !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button + .el-button {
+  margin-left: 0.5rem !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button:not(.el-button--primary):not(.el-button--text) {
+  color: var(--tk-text-muted) !important;
+  background: transparent !important;
+  border: 1px solid var(--tk-input-border) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button:not(.el-button--primary):not(.el-button--text):hover,
+.guestbook-twikoo-host .twikoo .el-button:not(.el-button--primary):not(.el-button--text):focus {
+  color: var(--tk-accent) !important;
+  border-color: var(--tk-accent-soft) !important;
+  background: var(--tk-accent-bg) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button--primary {
+  color: #fff !important;
+  background: var(--tk-accent) !important;
+  border-color: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button--primary:hover,
+.guestbook-twikoo-host .twikoo .el-button--primary:focus {
+  color: #fff !important;
+  background: var(--tk-accent-hover) !important;
+  border-color: var(--tk-accent-hover) !important;
+}
+
+.guestbook-twikoo-host .twikoo .el-button--primary.is-disabled,
+.guestbook-twikoo-host .twikoo .el-button--primary.is-disabled:hover {
+  color: rgba(255, 255, 255, 0.7) !important;
+  background: rgba(212, 115, 127, 0.45) !important;
+  border-color: transparent !important;
+}
+
+/* ── Compose ── */
+
+.guestbook-twikoo-host .twikoo .tk-comments > .tk-submit {
+  margin-bottom: 1.15rem;
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--tk-border-light);
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments > .tk-submit > .tk-row:first-child > .tk-avatar {
+  display: none;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments > .tk-submit > .tk-row:first-child > .tk-col {
+  width: 100%;
+  flex: 1;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input {
+  flex-direction: column !important;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input {
+  width: 100% !important;
+  flex: none !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input + .el-input {
+  margin: 0 !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input__inner {
+  padding: 0.5rem 0.7rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group__prepend {
+  padding: 0 0.6rem !important;
+  font-size: 0.6875rem !important;
+  letter-spacing: 0.03em;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input-group__prepend,
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input__inner {
+  border-radius: 8px !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input__inner {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input-group__prepend {
+  border-radius: 8px 0 0 8px !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-row.actions {
+  margin-left: 0 !important;
+  margin-top: 0.85rem !important;
+  margin-bottom: 0 !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-submit-action-icon {
+  color: var(--tk-text-muted);
+}
+
+.guestbook-twikoo-host .twikoo .tk-submit-action-icon:hover {
+  color: var(--tk-accent);
+}
+
+.guestbook-twikoo-host .twikoo .tk-submit-action-icon svg {
+  fill: currentColor !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-preview-container {
+  margin-left: 0 !important;
+  margin-top: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: var(--tk-input-bg);
+  border: 1px solid var(--tk-input-border);
+  border-radius: 10px;
+}
+
+/* ── Title bar ── */
+
+.guestbook-twikoo-host .twikoo .tk-comments-title {
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-heading);
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments-count {
+  font-size: 0.75rem;
+  color: var(--tk-text-muted);
+}
+
+.guestbook-twikoo-host .twikoo .tk-sort-item {
+  font-size: 0.6875rem;
+  color: var(--tk-text-light) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-sort-item.__active,
+.guestbook-twikoo-host .twikoo .tk-sort-item:hover {
+  color: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-icon.__comments {
+  color: var(--tk-text-muted);
+}
+
+.guestbook-twikoo-host .twikoo .tk-icon.__comments:hover {
+  color: var(--tk-accent);
+}
+
+.guestbook-twikoo-host .twikoo .tk-icon.__comments svg {
+  fill: currentColor !important;
+}
+
+/* ── Comments ── */
+
+.guestbook-twikoo-host .twikoo .tk-avatar {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments-container > .tk-comment > .tk-avatar {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  margin-right: 0.85rem !important;
+  border-radius: 10px !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies .tk-avatar,
+.guestbook-twikoo-host .twikoo .tk-comment .tk-submit .tk-avatar {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  margin-right: 0.4rem !important;
+  border-radius: 8px !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-avatar img,
+.guestbook-twikoo-host .twikoo .tk-avatar .tk-avatar-img {
+  border-radius: inherit !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments-container > .tk-comment > .tk-avatar img,
+.guestbook-twikoo-host .twikoo .tk-comments-container > .tk-comment > .tk-avatar .tk-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies .tk-avatar img,
+.guestbook-twikoo-host .twikoo .tk-replies .tk-avatar .tk-avatar-img,
+.guestbook-twikoo-host .twikoo .tk-comment .tk-submit .tk-avatar img,
+.guestbook-twikoo-host .twikoo .tk-comment .tk-submit .tk-avatar .tk-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments-container > .tk-comment + .tk-comment {
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--tk-border-light);
+}
+
+.guestbook-twikoo-host .twikoo .tk-nick,
+.guestbook-twikoo-host .twikoo .tk-nick-link {
+  font-size: 0.9375rem !important;
+  font-weight: 600;
+  color: var(--color-heading) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-nick-link:hover {
+  color: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-time {
+  font-size: 0.6875rem;
+  color: var(--tk-text-light) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-content {
+  font-size: 0.9375rem !important;
+  line-height: 1.8 !important;
+  color: var(--tk-text) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-content a {
+  color: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-action {
+  color: var(--tk-text-muted) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-action:hover {
+  color: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-action-icon svg {
+  fill: var(--tk-text-light) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-action:hover .tk-action-icon svg {
+  fill: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comment {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments-container > .tk-comment > .tk-main {
+  width: auto;
+  min-width: 0;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies {
+  margin-top: 0.75rem;
+  margin-left: 0;
+  padding-left: 0;
+  border-left: none;
+  width: 100%;
+}
+
+.guestbook-twikoo-host .twikoo .tk-comments-container > .tk-comment > .tk-main > .tk-replies {
+  margin-left: calc(-1 * var(--tk-reply-indent));
+  margin-right: calc(-1 * var(--tk-reply-extend));
+  width: calc(100% + var(--tk-reply-indent) + var(--tk-reply-extend));
+  max-width: none;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies .tk-replies {
+  padding-left: 0;
+  margin-top: 0.5rem;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies .tk-comment > .tk-main > .tk-replies {
+  margin-left: calc(-1 * var(--tk-reply-nest-indent));
+  margin-right: calc(-1 * var(--tk-reply-extend));
+  width: calc(100% + var(--tk-reply-nest-indent) + var(--tk-reply-extend));
+  max-width: none;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies > .tk-comment {
+  margin-top: 0.65rem;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  padding: 0.5rem 0.2rem 0.5rem 0.3rem;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--tk-border-light);
+  border-radius: 10px;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies > .tk-comment:first-child {
+  margin-top: 0;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies > .tk-comment > .tk-main {
+  flex: 1 1 0%;
+  width: auto;
+  min-width: 0;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies .tk-content {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies[data-tk-replies-collapsed="true"] {
+  max-height: 0 !important;
+  margin-top: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies.tk-replies-expand {
+  max-height: none !important;
+  overflow: visible !important;
+  visibility: visible;
+}
+
+.guestbook-twikoo-host .twikoo .tk-main > .tk-replies ~ .tk-expand-wrap:not(.tk-replies-toggle-wrap),
+.guestbook-twikoo-host .twikoo .tk-main > .tk-replies ~ .tk-collapse-wrap,
+.guestbook-twikoo-host .twikoo .tk-replies-native-expand {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 767px) {
+  .guestbook-twikoo-host .twikoo .tk-main:has(> .tk-replies > .tk-comment) > .tk-content + .tk-expand-wrap,
+  .guestbook-twikoo-host .twikoo .tk-main:has(> .tk-replies > .tk-comment) > .tk-content + .tk-collapse-wrap {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies-toggle-wrap {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.guestbook-twikoo-host .twikoo .tk-content.tk-content-expand {
+  max-height: none !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+  display: block !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies-toggle-wrap .tk-replies-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  padding: 0.55em 0.75em;
+  font-family: "LXGW WenKai", "霞鹜文楷", serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  color: var(--tk-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .guestbook-twikoo-host .twikoo .tk-replies-toggle-wrap .tk-replies-toggle:hover {
+    color: var(--tk-accent);
+    background: var(--tk-accent-bg);
+  }
+}
+
+.guestbook-twikoo-host .twikoo .tk-replies-toggle-wrap .tk-replies-toggle:focus-visible {
+  color: var(--tk-accent);
+  background: var(--tk-accent-bg);
+}
+
+.guestbook-twikoo-host .twikoo .tk-expand:hover {
+  background: var(--tk-accent-bg) !important;
+  color: var(--tk-accent) !important;
+}
+
+.guestbook-twikoo-host .twikoo .tk-footer {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--tk-border-light);
+  font-size: 0.6875rem;
+  color: var(--tk-text-light);
+  text-align: center;
+}
+
+.guestbook-twikoo-host .twikoo .tk-footer a:hover {
+  color: var(--tk-accent);
+}
+
+.guestbook-twikoo-host .twikoo .OwO .OwO-body {
+  background: var(--color-surface-alt) !important;
+  color: var(--tk-text) !important;
+  border-color: var(--tk-input-border) !important;
+  border-radius: 10px !important;
+}
+
+@media (max-width: 767px) {
+  .guestbook-twikoo-host .twikoo .tk-meta-input {
+    gap: 0.4rem;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-meta-input .el-input__inner {
+    padding: 0.42rem 0.6rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group__prepend {
+    padding: 0 0.5rem !important;
+    font-size: 0.6875rem !important;
+    letter-spacing: 0.02em;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input-group__prepend,
+  .guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input__inner {
+    border-radius: 8px !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input__inner {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-meta-input .el-input-group--prepend .el-input-group__prepend {
+    border-radius: 8px 0 0 8px !important;
+  }
+
+  .guestbook-twikoo-host {
+    --tk-reply-avatar: 1.5rem;
+    --tk-reply-avatar-gap: 0.35rem;
+    --tk-reply-nest-indent: calc(var(--tk-reply-avatar) + var(--tk-reply-avatar-gap) - var(--tk-reply-avatar) / 2);
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-main > .tk-row {
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.45rem;
+    justify-content: flex-start;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-replies > .tk-comment {
+    padding: 0.4rem 0.1rem 0.4rem 0.2rem;
+    border-radius: 8px;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-replies .tk-avatar,
+  .guestbook-twikoo-host .twikoo .tk-comment .tk-submit .tk-avatar {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    margin-right: 0.35rem !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-replies .tk-nick,
+  .guestbook-twikoo-host .twikoo .tk-replies .tk-nick-link {
+    font-size: 0.8125rem !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-replies .tk-content {
+    font-size: 0.875rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-replies .tk-submit > .tk-row:first-child > .tk-col {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-main > .tk-submit > .tk-row:first-child > .tk-col {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-replies .tk-row.actions,
+  .guestbook-twikoo-host .twikoo .tk-main > .tk-submit .tk-row.actions {
+    margin-left: 0 !important;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-end;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-expand {
+    padding: 0.55em;
+    font-size: 0.75rem;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .guestbook-twikoo-host .twikoo .tk-extras {
+    display: none !important;
+  }
+}

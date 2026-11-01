@@ -1,0 +1,516 @@
+/* ── Season archive timeline ── */
+.season-archive {
+  display: none;
+  --sa-accent: var(--color-accent-rose);
+  --sa-accent-soft: rgba(212, 115, 127, 0.45);
+  --sa-line: #dcd8d4;
+  --sa-dot: #c8c4c0;
+  --sa-text: #3a3836;
+  --sa-muted: #a8a4a0;
+  --sa-faint: #c8c4c0;
+
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.season-archive__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.375rem;
+}
+
+.season-archive__header {
+  margin: 0;
+  padding-bottom: 2.75rem;
+  text-align: center;
+}
+
+.season-archive__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.4375rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: var(--sa-text);
+  line-height: 1.3;
+}
+
+.season-archive__block {
+  position: relative;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  row-gap: 0.375rem;
+  overflow: visible;
+}
+
+.season-archive__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 0 0.375rem;
+  line-height: 1;
+}
+
+.season-archive__name {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  line-height: 1;
+  font-family: var(--font-serif);
+  letter-spacing: 0.14em;
+  color: var(--sa-text);
+}
+
+.season-archive__block.is-current .season-archive__name {
+  color: var(--sa-accent);
+}
+
+.season-archive__count {
+  flex: 0 0 auto;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--sa-muted);
+  text-align: right;
+  white-space: nowrap;
+  opacity: 0.88;
+}
+
+.season-archive__years-link {
+  display: block;
+  margin-top: 0;
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.season-archive__axis {
+  position: relative;
+  height: 0.4375rem;
+  margin: 0 0.375rem;
+  overflow: visible;
+  z-index: 1;
+}
+
+.season-archive__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  transform: none;
+  background: var(--sa-line);
+}
+
+.season-archive__block.is-current .season-archive__line {
+  background: linear-gradient(
+    90deg,
+    var(--sa-accent-soft) 0%,
+    var(--sa-accent) 52%,
+    var(--sa-accent-soft) 100%
+  );
+}
+
+.season-archive__dots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.season-archive__dot {
+  position: absolute;
+  top: 0;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sa-dot);
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 1;
+  transition: transform 0.22s var(--ease-smooth), background-color 0.22s var(--ease-smooth);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.season-archive__block.is-current .season-archive__dot,
+.season-archive__dot.is-current {
+  background: var(--sa-dot);
+}
+
+.season-archive__dot:hover,
+.season-archive__dot:focus-visible {
+  background: var(--sa-accent);
+}
+
+.season-archive__dot:hover,
+.season-archive__dot:focus-visible {
+  transform: translate(-50%, -50%) scale(1.28);
+  outline: none;
+  z-index: 30;
+}
+
+.season-archive__dot:active {
+  transform: translate(-50%, -50%) scale(1.18);
+}
+
+.season-archive__tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.625rem);
+  transform: translateX(-50%) translateY(4px);
+  min-width: 7.5rem;
+  max-width: 14rem;
+  padding: 0.5rem 0.625rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s var(--ease-smooth),
+    transform 0.25s var(--ease-smooth),
+    visibility 0.25s;
+  pointer-events: none;
+  z-index: 40;
+  text-align: left;
+  white-space: normal;
+}
+
+.season-archive__dot:hover .season-archive__tip,
+.season-archive__dot:focus-visible .season-archive__tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.season-archive__tip-title {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--sa-text);
+  margin-bottom: 0.1875rem;
+}
+
+.season-archive__tip-date {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--sa-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.season-archive__block.is-current .season-archive__dot:hover .season-archive__tip-title,
+.season-archive__block.is-current .season-archive__dot:focus-visible .season-archive__tip-title {
+  color: var(--sa-accent);
+}
+
+.season-archive__years {
+  display: block;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--sa-faint);
+  line-height: 1.4;
+}
+
+.season-archive__empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--sa-muted);
+  text-align: center;
+}
+
+/* ── Desktop inline rail (hidden on mobile) ── */
+.season-archive__inline {
+  display: none;
+}
+
+.season-archive__track {
+  position: relative;
+  height: 1.125rem;
+  margin: 0 0 0.875rem;
+  overflow: visible;
+}
+
+.season-archive__line--inline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+  background: var(--sa-line);
+}
+
+.season-archive__markers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.season-archive__season-dot {
+  display: none;
+}
+
+.season-archive__dot--inline {
+  top: 50%;
+  width: 0.375rem;
+  height: 0.375rem;
+  background: var(--sa-dot);
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.22s var(--ease-smooth),
+    background-color 0.22s var(--ease-smooth);
+}
+
+.season-archive__dot--inline:hover,
+.season-archive__dot--inline:focus-visible {
+  background: var(--sa-accent);
+  transform: translate(-50%, -50%) scale(1.28);
+}
+
+.season-archive__dot--inline:active {
+  transform: translate(-50%, -50%) scale(1.18);
+}
+
+.season-archive__dot--inline .season-archive__tip {
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+
+.season-archive__dot--inline:hover .season-archive__tip,
+.season-archive__dot--inline:focus-visible .season-archive__tip {
+  transform: translateX(-50%) translateY(0);
+}
+
+.season-archive__dot--inline:hover .season-archive__tip-title,
+.season-archive__dot--inline:focus-visible .season-archive__tip-title {
+  color: var(--sa-accent);
+}
+
+.season-archive__now {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 0;
+  height: 100%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.season-archive__now-tick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1px;
+  height: 1.375rem;
+  background: var(--sa-accent);
+  transform: translate(-50%, -50%);
+}
+
+.season-archive__labels {
+  position: relative;
+  height: 1.125rem;
+  margin: 0;
+}
+
+.season-archive__season-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: var(--sa-text);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.season-archive__season-label:hover,
+.season-archive__season-label:focus-visible {
+  color: var(--sa-accent);
+}
+
+.season-archive__now-label {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateX(50%);
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--sa-accent);
+}
+
+.season-archive__latest {
+  margin: 1.75rem 0 0;
+  text-align: center;
+}
+
+.season-archive__latest-link {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  color: var(--sa-text);
+  text-decoration: none;
+  transition: color 0.22s var(--ease-smooth);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.season-archive__latest-link:hover,
+.season-archive__latest-link:focus-visible {
+  color: var(--sa-accent);
+}
+
+.season-archive__latest-label,
+.season-archive__latest-dot,
+.season-archive__latest-title {
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: inherit;
+}
+
+.season-archive__latest-label {
+  flex: 0 0 auto;
+}
+
+.season-archive__latest-dot {
+  flex: 0 0 auto;
+  padding: 0 0.3rem;
+  line-height: 1;
+}
+
+.season-archive__latest-title {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.season-archive__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0.65rem 0 0;
+  text-align: center;
+}
+
+.season-archive__more-meta,
+.season-archive__more-dot,
+.season-archive__more-link {
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.season-archive__more-meta {
+  color: var(--sa-text);
+}
+
+.season-archive__more-dot {
+  padding: 0 0.3rem;
+  color: var(--sa-text);
+  line-height: 1;
+}
+
+.season-archive__more-link {
+  color: var(--color-accent-rose);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 115, 127, 0.35);
+  transition:
+    color 0.22s var(--ease-smooth),
+    border-color 0.22s var(--ease-smooth);
+}
+
+.season-archive__more-link:hover,
+.season-archive__more-link:focus-visible {
+  color: #b85a66;
+  border-bottom-color: var(--color-accent-rose);
+}
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+  .season-archive {
+    --sa-side: clamp(1.75rem, 8.5vw, 2.75rem);
+
+    display: block;
+    max-width: 28rem;
+    margin: 0 auto;
+    padding:
+      0
+      max(var(--sa-side), env(safe-area-inset-right, 0px))
+      3rem
+      max(var(--sa-side), env(safe-area-inset-left, 0px));
+    background: transparent;
+  }
+
+  body.is-home .season-archive {
+    background: transparent;
+  }
+}
+
+/* ── Desktop timeline: centered below article list ── */
+@media (min-width: 768px) {
+  body.posts-view--timeline .posts-view__season .season-archive {
+    display: block !important;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  body.posts-view--timeline .season-archive__list--vertical {
+    display: none;
+  }
+
+  body.posts-view--timeline .season-archive__inline {
+    display: block;
+    width: 100%;
+    overflow: visible;
+  }
+
+  body.posts-view--timeline .season-archive__line--inline {
+    background: var(--sa-line);
+  }
+
+  body.posts-view--timeline .season-archive__latest-link {
+    max-width: min(100%, 28rem);
+  }
+}

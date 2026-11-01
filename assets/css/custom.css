@@ -1,0 +1,81 @@
+.header-nav__link {
+  font-size: 0.9375rem;
+}
+
+.header-nav__dropdown {
+  position: relative;
+}
+
+.header-nav__dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.header-nav__dropdown-arrow {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s ease;
+}
+
+.header-nav__dropdown:hover .header-nav__dropdown-arrow,
+.header-nav__dropdown-toggle:focus-visible ~ .header-nav__dropdown-arrow,
+.header-nav__dropdown-toggle:focus-within .header-nav__dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.header-nav__dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 120px;
+  padding: 6px;
+  background: var(--color-nav-bg, rgba(255,255,255,0.95));
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid var(--color-glass-border, rgba(0,0,0,0.06));
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.header-nav__dropdown:hover .header-nav__dropdown-menu,
+.header-nav__dropdown-toggle:focus-visible + .header-nav__dropdown-menu,
+.header-nav__dropdown-menu:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.header-nav__dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--color-nav-link, #555);
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.header-nav__dropdown-item:hover {
+  color: var(--color-nav-link-hover, #333);
+  background: rgba(0,0,0,0.04);
+}
+
+.header-nav__dropdown-count {
+  margin-left: 12px;
+  font-size: 0.75rem;
+  color: #999;
+  background: rgba(0,0,0,0.05);
+  padding: 1px 7px;
+  border-radius: 999px;
+}

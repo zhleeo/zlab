@@ -1,0 +1,73 @@
+{{ define "main" }}
+{{- $cfg := site.Params.guestbook -}}
+{{- $title := $cfg.title | default .Title -}}
+{{- $subtitle := $cfg.subtitle | default "欢迎在此留下你的足迹。" -}}
+{{- $messages := $cfg.messages | default slice -}}
+{{- $mailto := $cfg.mailto | default (partial "social-get.html" (dict "name" "E-Mail" "default" "")) -}}
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooEnv := or $twikoo.envId $twikoo.envid -}}
+
+<div class="guestbook-page is-visible" data-guestbook>
+  {{ partial "background.html" . }}
+
+  <div class="guestbook-page__content">
+  <header class="guestbook-header page-header">
+    <p class="page-header__label">{{ $cfg.label | default "GUESTBOOK" }}</p>
+    <h1 class="page-header__title">{{ $title }}</h1>
+    <p class="page-header__sub">{{ $subtitle }}</p>
+  </header>
+
+  {{- if .Content }}
+  <div class="guestbook-intro">
+    {{ .Content }}
+  </div>
+  {{- end }}
+
+  {{- if $twikooEnv }}
+  <section class="guestbook-twikoo-panel" aria-labelledby="guestbook-twikoo-title">
+    <h2 class="guestbook-messages__title" id="guestbook-twikoo-title">{{ $cfg.messages_title | default "留言板" }}</h2>
+    <div
+      id="guestbook-twikoo-root"
+      class="guestbook-twikoo-host"
+      data-twikoo-env="{{ $twikooEnv }}"
+      data-twikoo-path="/guestbook/"
+      data-twikoo-lang="{{ $twikoo.lang | default `zh-CN` }}"
+    >
+      <div id="twikoo"></div>
+    </div>
+  </section>
+  {{- else }}
+  <section class="guestbook-compose" aria-labelledby="guestbook-compose-title">
+    <h2 class="guestbook-compose__title" id="guestbook-compose-title">{{ $cfg.compose_title | default "留下印记" }}</h2>
+    <p class="guestbook-compose__hint">{{ $cfg.compose_hint | default "留言经审核后会显示在下方。也可以通过邮件与我联系。" }}</p>
+    <form class="guestbook-form" data-guestbook-form{{ if $mailto }} data-mailto="{{ $mailto }}"{{ end }}>
+      <label class="guestbook-form__field">
+        <span class="guestbook-form__label">称呼</span>
+        <input class="guestbook-form__input" type="text" name="name" maxlength="32" placeholder="如何称呼你" autocomplete="name" required>
+      </label>
+      <label class="guestbook-form__field">
+        <span class="guestbook-form__label">邮箱</span>
+        <input class="guestbook-form__input" type="email" name="email" maxlength="80" placeholder="选填，不会公开" autocomplete="email">
+      </label>
+      <label class="guestbook-form__field guestbook-form__field--full">
+        <span class="guestbook-form__label">留言</span>
+        <textarea class="guestbook-form__textarea" name="message" rows="4" maxlength="500" placeholder="想说点什么…" required></textarea>
+      </label>
+      <button type="submit" class="guestbook-form__submit">发表留言</button>
+    </form>
+  </section>
+
+  <section class="guestbook-messages" aria-labelledby="guestbook-messages-title">
+    <h2 class="guestbook-messages__title" id="guestbook-messages-title">{{ $cfg.messages_title | default "留言板" }}</h2>
+    <ul class="guestbook-messages__list">
+      {{- range $i, $item := $messages -}}
+        {{ partial "guestbook-message.html" (dict "Item" $item "Index" $i) }}
+      {{- else -}}
+        <li class="guestbook-messages__empty">还没有留言，来做第一个吧。</li>
+      {{- end -}}
+    </ul>
+  </section>
+  {{- end }}
+  </div>
+</div>
+{{ end }}

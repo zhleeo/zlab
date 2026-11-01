@@ -1,0 +1,49 @@
+{{- $p := .post -}}
+{{- $i := .index -}}
+{{- $num := printf "%02d" (add $i 1) -}}
+{{- $cats := $p.Params.categories | default slice -}}
+{{- $catLabel := "文章" -}}
+{{- if gt (len $cats) 0 -}}
+  {{- $catLabel = printf "文章 · %s" (delimit $cats " · ") -}}
+{{- end -}}
+{{- $tags := $p.Params.tags | default slice -}}
+{{- $sec := sub now.Unix $p.Date.Unix -}}
+{{- $timeLabel := "" -}}
+{{- if lt $sec 60 -}}
+  {{- $timeLabel = "刚刚" -}}
+{{- else if lt $sec 3600 -}}
+  {{- $timeLabel = printf "%d 分钟前" (div $sec 60) -}}
+{{- else if lt $sec 86400 -}}
+  {{- $timeLabel = printf "%d 小时前" (div $sec 3600) -}}
+{{- else if lt $sec 604800 -}}
+  {{- $timeLabel = printf "%d 天前" (div $sec 86400) -}}
+{{- else -}}
+  {{- $timeLabel = $p.Date.Format "2006年1月2日" -}}
+{{- end -}}
+<li class="posts-timeline__item{{ if .desktopHidden }} posts-timeline__item--desktop-hidden{{ end }}">
+  <a class="posts-timeline__link" href="{{ $p.RelPermalink }}">
+    <span class="posts-timeline__num" aria-hidden="true">{{ $num }}</span>
+    <span class="posts-timeline__rail" aria-hidden="true">
+      <span class="posts-timeline__seg posts-timeline__seg--top"></span>
+      <span class="posts-timeline__seg posts-timeline__seg--gap"></span>
+      <span class="posts-timeline__seg posts-timeline__seg--bot"></span>
+    </span>
+    <span class="posts-timeline__body">
+      <span class="posts-timeline__headline">
+        <span class="posts-timeline__post-title">{{ $p.Title }}</span>
+        <time class="posts-timeline__time" datetime="{{ $p.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $timeLabel }}</time>
+      </span>
+      <span class="posts-timeline__meta">
+        <span class="posts-timeline__category">{{ $catLabel }}</span>
+      </span>
+      {{- if $tags -}}
+      <span class="posts-timeline__tags">
+        {{- range $j, $tag := $tags -}}
+          {{- if $j }}<span class="posts-timeline__tag-sep" aria-hidden="true"> · </span>{{ end -}}
+          <span class="posts-timeline__tag">{{ $tag }}</span>
+        {{- end -}}
+      </span>
+      {{- end -}}
+    </span>
+  </a>
+</li>

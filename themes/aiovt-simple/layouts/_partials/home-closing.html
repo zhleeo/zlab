@@ -1,0 +1,46 @@
+{{- $closing := site.Params.home.closing | default dict -}}
+{{- if ($closing.enabled | default true) -}}
+  {{- $now := now -}}
+  {{- $month := $now.Month -}}
+  {{- $seasonTitle := $closing.season_title | default "" -}}
+  {{- if not $seasonTitle -}}
+    {{- if and (ge $month 3) (le $month 5) -}}
+      {{- $seasonTitle = "春日迟迟" -}}
+    {{- else if and (ge $month 6) (le $month 8) -}}
+      {{- $seasonTitle = "仲夏蝉鸣" -}}
+    {{- else if and (ge $month 9) (le $month 11) -}}
+      {{- $seasonTitle = "金秋桂雨" -}}
+    {{- else -}}
+      {{- $seasonTitle = "隆冬听雪" -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $welcome := $closing.welcome | default "欢迎来信" -}}
+  {{- $markLabel := $closing.mark_label | default "留下印记" -}}
+  {{- $markURL := $closing.mark_url | default "/guestbook" -}}
+  {{- $subscribeLabel := $closing.subscribe_label | default "订阅通信" -}}
+  {{- $subscribeURL := $closing.subscribe_url | default (partial "social-get.html" (dict "name" "RSS" "default" "/index.xml")) -}}
+
+<section class="home-closing" id="home-closing" aria-label="页尾信息">
+  <header class="home-closing__head">
+    <p class="home-closing__season">{{ $seasonTitle }}</p>
+    <p class="home-closing__welcome">{{ $welcome }}</p>
+  </header>
+
+  <div class="home-closing__panels">
+    <div class="home-closing__panel">
+      <p class="home-closing__panel-label">
+        <a class="home-closing__panel-link" href="{{ $markURL | relURL }}">{{ $markLabel }}</a>
+      </p>
+    </div>
+
+    <div class="home-closing__divider" aria-hidden="true"></div>
+
+    <div class="home-closing__panel">
+      <p class="home-closing__panel-label">
+        <a class="home-closing__panel-link" href="{{ $subscribeURL | relURL }}">{{ $subscribeLabel }}</a>
+      </p>
+    </div>
+  </div>
+</section>
+{{- end -}}

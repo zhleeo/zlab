@@ -1,0 +1,58 @@
+{{- $profile := site.Params.profile -}}
+{{- $hero := site.Params.hero -}}
+{{- $stats := site.Params.stats -}}
+
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $postCount := len $posts -}}
+{{- $days := 0 -}}
+{{- if $stats.enabled -}}
+  {{- $startDate := time $stats.start_date -}}
+  {{- $days = div (sub now.Unix $startDate.Unix) 86400 -}}
+{{- end -}}
+
+<section class="hero" id="hero">
+  <div class="hero__inner">
+    <div class="hero__avatar-wrap hero-animate" style="--delay: 0.1s">
+      <div class="hero__avatar-float">
+        <div class="hero__avatar-glow"></div>
+        <img
+          class="hero__avatar"
+          src="{{ $profile.avatar | relURL }}"
+          alt="{{ $profile.name }}"
+          width="76"
+          height="76"
+          loading="eager"
+          decoding="async"
+        >
+      </div>
+    </div>
+
+    <h1 class="hero__title hero-animate" style="--delay: 0.2s">
+      {{ $profile.greeting }}
+      <span class="hero__name">{{ $profile.name }}</span>
+    </h1>
+
+    <p class="hero__tagline hero-animate" style="--delay: 0.35s">
+      <span class="hero__tagline-text">
+        {{ $hero.tagline.before }}<em class="hero__tagline-highlight">{{ $hero.tagline.highlight }}</em>{{ $hero.tagline.middle }}
+      </span>
+      <span class="hero__tag">
+        {{ $hero.tagline.tag }}<span class="hero__cursor" aria-hidden="true"></span>
+      </span>
+    </p>
+
+    {{ partial "hitokoto.html" . }}
+
+    {{- if $stats.enabled }}
+    <p class="hero__stats hero-animate" style="--delay: 0.65s">
+      <span>{{ $postCount }} 篇</span>
+      <span class="hero__stats-dot" aria-hidden="true">·</span>
+      <span>{{ $days }} 天</span>
+    </p>
+    {{- end }}
+
+    <div class="hero__social hero-animate" style="--delay: 0.8s">
+      {{ partial "social.html" . }}
+    </div>
+  </div>
+</section>

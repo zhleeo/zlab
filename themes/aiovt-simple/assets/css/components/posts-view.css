@@ -1,0 +1,89 @@
+/* ── Desktop posts view (orbit ↔ timeline via site.Params.home.desktop_posts_view) ── */
+@media (min-width: 768px) {
+  .posts-view {
+    position: relative;
+    z-index: 1;
+  }
+
+  body.posts-view--orbit .orbit-section {
+    display: block;
+  }
+
+  body.posts-view--orbit .posts-view__split {
+    display: none;
+  }
+
+  body.posts-view--timeline .orbit-section {
+    display: none !important;
+  }
+
+  body.posts-view--timeline .posts-view {
+    --posts-view-edge: clamp(1.25rem, 2.5vw, 1.75rem);
+    --posts-view-col-gap: clamp(2rem, 4vw, 3rem);
+    --posts-view-max: calc(28rem * 2 + var(--posts-view-col-gap));
+  }
+
+  body.posts-view--timeline .posts-view__split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    position: relative;
+    width: min(var(--posts-view-max), calc(100% - 2 * var(--posts-view-edge)));
+    max-width: var(--posts-view-max);
+    margin-inline: auto;
+    padding: 2.5rem 0 5rem;
+    box-sizing: border-box;
+    gap: 0;
+  }
+
+  body.posts-view--timeline .posts-view__split::before {
+    content: "";
+    position: absolute;
+    top: 2.5rem;
+    bottom: 5rem;
+    left: 50%;
+    width: 1px;
+    background: var(--color-border);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body.posts-view--timeline .posts-view__main {
+    grid-column: 1;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: calc(var(--posts-view-col-gap) / 2);
+    box-sizing: border-box;
+    z-index: 1;
+  }
+
+  body.posts-view--timeline .posts-view__aside {
+    grid-column: 2;
+    min-width: 0;
+    padding-left: calc(var(--posts-view-col-gap) / 2);
+    padding-right: 0;
+    box-sizing: border-box;
+    z-index: 1;
+  }
+
+  body.posts-view--timeline .posts-view__season {
+    display: block;
+    width: min(var(--posts-view-max), calc(100% - 2 * var(--posts-view-edge)));
+    max-width: var(--posts-view-max);
+    margin: 3.5rem auto 0;
+    padding: 0 0 1rem;
+    box-sizing: border-box;
+    z-index: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .posts-view__aside {
+    display: none;
+  }
+
+  .posts-view__season {
+    width: 100%;
+  }
+}

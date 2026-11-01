@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="{{ or site.Language.Locale site.Language.Lang }}" dir="{{ if ge hugo.Version "0.158.0" }}{{ or site.Language.Direction `ltr` }}{{ else }}{{ or site.Language.LanguageDirection `ltr` }}{{ end }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body class="{{ if .IsHome }}is-home {{ end }}{{ if and .IsPage (eq .Section "posts") }}is-post {{ end }}{{ if and .IsSection (eq .Section "posts") }}is-posts-list {{ end }}{{ if eq .Section "archives" }}is-archives {{ end }}{{ if eq .Section "thoughts" }}is-thoughts {{ end }}{{ if eq .Section "friends" }}is-friends {{ end }}{{ if eq .Section "about" }}is-about {{ end }}{{ if eq .Section "guestbook" }}is-guestbook {{ end }}{{ if and (eq .Kind "term") (eq .Data.Singular "tag") }}is-tag-term {{ end }}{{ if and (eq .Kind "taxonomy") (eq .Data.Singular "tag") }}is-tags-index {{ end }}{{ if and (eq .Kind "term") (eq .Data.Singular "category") }}is-category-term {{ end }}{{ if and (eq .Kind "taxonomy") (eq .Data.Singular "category") }}is-categories-index {{ end }}{{ if .IsHome }}{{ if eq (site.Params.home.desktop_posts_view | default "orbit") "timeline" }}posts-view--timeline{{ else }}posts-view--orbit{{ end }}{{ end }}">
+  {{ partial "loader.html" . }}
+  {{ partial "header.html" . }}
+
+  <main id="main">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{ partial "footer.html" . }}
+  {{ partial "search-panel.html" . }}
+  {{ partial "head/js.html" . }}
+</body>
+</html>

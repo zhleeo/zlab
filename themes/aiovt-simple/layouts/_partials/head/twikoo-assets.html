@@ -1,0 +1,10 @@
+{{- $twikoo := site.Params.twikoo | default dict -}}
+{{- $twikooEnv := or $twikoo.envId $twikoo.envid -}}
+{{- $twikooVersion := $twikoo.version | default "1.7.13" -}}
+
+{{- if $twikooEnv }}
+  {{- $twikooCssCdn := $twikoo.cssCdn | default (printf "https://registry.npmmirror.com/twikoo/%s/files/dist/twikoo.css" $twikooVersion) -}}
+  <link rel="stylesheet" href="{{ $twikooCssCdn }}">
+  {{- $twikooCdn := $twikoo.cdn | default (printf "https://registry.npmmirror.com/twikoo/%s/files/dist/twikoo.nocss.js" $twikooVersion) -}}
+  <script src="{{ $twikooCdn }}" defer></script>
+{{- end }}

@@ -1,0 +1,52 @@
+{{- $ctx := .Context -}}
+{{- $label := .Label | default "标签" -}}
+{{- $hash := .Hash | default true -}}
+{{- $pages := $ctx.Pages.ByDate.Reverse -}}
+{{- $total := len $pages -}}
+{{- $scratch := newScratch -}}
+{{- range $pages -}}
+  {{- range .Params.categories -}}
+    {{- $scratch.SetInMap "cats" . true -}}
+  {{- end -}}
+{{- end -}}
+{{- $catMap := $scratch.Get "cats" | default dict -}}
+{{- $catCount := len $catMap -}}
+{{- $yearGroups := $pages.GroupByDate "2006" -}}
+
+<div class="tag-term-page" data-tag-term>
+  {{ partial "background.html" $ctx }}
+
+  <header class="tag-term-header page-header">
+    <p class="page-header__label">{{ $label }}</p>
+    <div class="tag-term-header__hero">
+      <span class="tag-term-header__count">{{ $total }}</span>
+      <span class="tag-term-header__suffix">篇 · 散落在 {{ $catCount }} 个分类</span>
+    </div>
+    <h1 class="tag-term-header__tag">{{ if $hash }}# {{ end }}{{ $ctx.Title }}</h1>
+    <hr class="tag-term-header__rule">
+  </header>
+
+  <div class="tag-term-timeline">
+    {{- range $yearGroups -}}
+      <section class="tag-term-year">
+        <header class="tag-term-year__head">
+          <span class="tag-term-year__num">{{ .Key }}</span>
+          <span class="tag-term-year__count">{{ len .Pages }} 篇</span>
+        </header>
+        <ul class="tag-term-list">
+          {{- range .Pages -}}
+            <li class="tag-term-item">
+              <a class="tag-term-item__title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+              <div class="tag-term-item__tags">
+                <span class="tag-term-item__tag">{{ $ctx.Title }}</span>
+              </div>
+              <time class="tag-term-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01月02日" }}</time>
+            </li>
+          {{- end -}}
+        </ul>
+      </section>
+    {{- else -}}
+      <p class="tag-term-empty">暂无文章。</p>
+    {{- end -}}
+  </div>
+</div>

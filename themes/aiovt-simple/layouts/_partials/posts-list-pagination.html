@@ -1,0 +1,26 @@
+{{- $paginator := .Paginator -}}
+{{- if gt $paginator.TotalPages 1 -}}
+<nav class="posts-list-pagination" aria-label="文章分页">
+  {{- if $paginator.HasPrev -}}
+    <a class="posts-list-pagination__link" href="{{ $paginator.Prev.URL }}" rel="prev">上一页</a>
+  {{- else -}}
+    <span class="posts-list-pagination__link posts-list-pagination__link--disabled">上一页</span>
+  {{- end -}}
+
+  <div class="posts-list-pagination__pages" role="group" aria-label="页码">
+    {{- range $paginator.Pagers -}}
+      {{- if eq . $paginator -}}
+        <span class="posts-list-pagination__page is-active" aria-current="page">{{ .PageNumber }}</span>
+      {{- else -}}
+        <a class="posts-list-pagination__page" href="{{ .URL }}">{{ .PageNumber }}</a>
+      {{- end -}}
+    {{- end -}}
+  </div>
+
+  {{- if $paginator.HasNext -}}
+    <a class="posts-list-pagination__link" href="{{ $paginator.Next.URL }}" rel="next">下一页</a>
+  {{- else -}}
+    <span class="posts-list-pagination__link posts-list-pagination__link--disabled">下一页</span>
+  {{- end -}}
+</nav>
+{{- end -}}

@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{- $ctx := . -}}
+{{- $label := "TAG" -}}
+{{- $hash := true -}}
+{{ partial "taxonomy-term.html" (dict "Context" $ctx "Label" $label "Hash" $hash) }}
+{{ end }}

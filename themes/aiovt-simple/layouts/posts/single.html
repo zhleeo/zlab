@@ -1,0 +1,88 @@
+{{ define "main" }}
+{{- $defaultCover := site.Params.post.default_cover | default "img/default-post-cover.png" -}}
+{{- $cover := .Params.cover | default .Params.image | default $defaultCover -}}
+{{- $mood := .Params.mood | default "" -}}
+{{- $weather := .Params.weather | default "" -}}
+{{- $weekdays := slice "日" "一" "二" "三" "四" "五" "六" -}}
+{{- $weekday := printf "星期%s" (index $weekdays (int .Date.Weekday)) -}}
+{{- $tags := .Params.tags | default slice -}}
+{{- $summaryLink := .Params.summary_link | default "" -}}
+{{- $license := .Params.license | default "" -}}
+
+<article class="post" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="post-sheet">
+    <div class="post-frame">
+      <header class="post-cover">
+        <div class="post-cover__frame">
+          <img
+            class="post-cover__img"
+            src="{{ $cover | relURL }}"
+            alt="{{ .Title }}"
+            width="1200"
+            height="420"
+            loading="eager"
+            decoding="async"
+          >
+          <div class="post-cover__fade" aria-hidden="true"></div>
+        </div>
+      </header>
+
+      <div class="post-column">
+        <div class="post-head">
+          <h1 class="post-title" itemprop="headline">{{ .Title }}</h1>
+          <div class="post-meta">
+            <div class="post-meta__main">
+              <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" itemprop="datePublished">
+                {{ .Date.Format "2006年1月2日" }}{{ $weekday }}
+              </time>
+              {{- if $weather -}}
+                <span class="post-meta__dot" aria-hidden="true">·</span>
+                <span>{{ $weather }}</span>
+              {{- end -}}
+              {{- if $mood -}}
+                <span class="post-meta__dot post-meta__dot--mood" aria-hidden="true"></span>
+                <span>{{ $mood }}</span>
+              {{- end -}}
+            </div>
+            {{- with $tags -}}
+            <div class="post-meta__tags">
+              {{- range . -}}
+                <a class="post-meta__tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" rel="tag">{{ . }}</a>
+              {{- end -}}
+            </div>
+            {{- end -}}
+          </div>
+          {{- if or $license .Params.voice_input -}}
+          <div class="post-meta post-meta--sub">
+            {{- if .Params.voice_input -}}
+              <span class="post-meta__voice">语音输入</span>
+            {{- end -}}
+            {{- if $license -}}
+              <a class="post-meta__license" href="{{ $license }}" rel="license noopener" target="_blank" aria-label="许可协议">CC</a>
+            {{- end -}}
+          </div>
+          {{- end -}}
+        </div>
+
+        {{- with .Description -}}
+        <aside class="post-summary" aria-label="文章概要">
+          <p class="post-summary__label">概要</p>
+          <p class="post-summary__text">{{ . }}</p>
+          {{- with $summaryLink -}}
+            <a class="post-summary__more" href="{{ . | relURL }}">打开余白 ↗</a>
+          {{- end -}}
+        </aside>
+        {{- end -}}
+
+        <div class="post-body" itemprop="articleBody">
+          {{ .Content }}
+        </div>
+      </div>
+
+      <div class="post-column post-column--tail">
+        {{ partial "post-twikoo.html" . }}
+      </div>
+    </div>
+  </div>
+</article>
+{{ end }}

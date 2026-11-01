@@ -1,0 +1,85 @@
+/* ── Theme toggle: circular view transition (real theme reveal, not color mask) ── */
+
+:root {
+  --theme-transition-duration: 680ms;
+  --theme-transition-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Disable default cross-fade; drive arc reveal manually */
+html[data-theme-motion]::view-transition-group(root) {
+  animation-duration: 0s;
+}
+
+html[data-theme-motion]::view-transition-old(root),
+html[data-theme-motion]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  height: 100%;
+  width: 100%;
+  inset: 0;
+  object-fit: cover;
+}
+
+@keyframes theme-circle-expand {
+  from {
+    clip-path: circle(0px at var(--theme-x) var(--theme-y));
+  }
+
+  to {
+    clip-path: circle(var(--theme-r) at var(--theme-x) var(--theme-y));
+  }
+}
+
+@keyframes theme-circle-contract {
+  from {
+    clip-path: circle(var(--theme-r) at var(--theme-x) var(--theme-y));
+  }
+
+  to {
+    clip-path: circle(0px at var(--theme-x) var(--theme-y));
+  }
+}
+
+/* Light → dark: new (dark) page expands from button */
+html[data-theme-motion="expand"]::view-transition-new(root) {
+  z-index: 1;
+  animation: theme-circle-expand var(--theme-transition-duration) var(--theme-transition-ease) forwards;
+}
+
+html[data-theme-motion="expand"]::view-transition-old(root) {
+  z-index: 0;
+}
+
+/* Dark → light: old (dark) page contracts toward button, revealing new light page */
+html[data-theme-motion="contract"]::view-transition-old(root) {
+  z-index: 1;
+  animation: theme-circle-contract var(--theme-transition-duration) var(--theme-transition-ease) forwards;
+}
+
+html[data-theme-motion="contract"]::view-transition-new(root) {
+  z-index: 0;
+}
+
+/* Fallback when View Transitions unavailable */
+@media (prefers-reduced-motion: no-preference) {
+  html.is-theme-animating,
+  html.is-theme-animating *,
+  html.is-theme-animating *::before,
+  html.is-theme-animating *::after {
+    transition-property:
+      background,
+      background-color,
+      color,
+      border-color,
+      outline-color,
+      box-shadow,
+      fill,
+      stroke;
+    transition-duration: 0.45s;
+    transition-timing-function: var(--theme-transition-ease);
+  }
+
+  html.is-theme-animating :where(img, video, canvas, iframe, picture) {
+    transition: none !important;
+  }
+}

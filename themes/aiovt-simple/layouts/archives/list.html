@@ -1,0 +1,145 @@
+{{ define "main" }}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $posts = $posts.ByDate.Reverse -}}
+{{- $total := len $posts -}}
+{{- $now := now -}}
+{{- $initialCount := site.Params.archives.initial_count | default 24 -}}
+{{- $initialPosts := first $initialCount $posts -}}
+{{- $restPosts := after $initialCount $posts -}}
+{{- $monthCN := dict "01" "一月" "02" "二月" "03" "三月" "04" "四月" "05" "五月" "06" "六月" "07" "七月" "08" "八月" "09" "九月" "10" "十月" "11" "十一月" "12" "十二月" -}}
+{{- $monthEN := dict "01" "JAN" "02" "FEB" "03" "MAR" "04" "APR" "05" "MAY" "06" "JUN" "07" "JUL" "08" "AUG" "09" "SEP" "10" "OCT" "11" "NOV" "12" "DEC" -}}
+{{- $yearGroups := $posts.GroupByDate "2006" -}}
+{{- $initialYearGroups := $initialPosts.GroupByDate "2006" -}}
+{{- $yearCounts := dict -}}
+{{- range $yearGroups -}}
+  {{- $yearCounts = merge $yearCounts (dict .Key (len .Pages)) -}}
+{{- end -}}
+{{- $oldestYear := $now.Year -}}
+{{- if gt $total 0 -}}
+  {{- $oldestYear = (index ($posts.ByDate) 0).Date.Year -}}
+{{- end -}}
+
+<div class="archives-page" data-archives>
+  <div class="archives-layout">
+    <div class="archives-main">
+      <header class="archives-stats page-header">
+        <p class="page-header__label">{{ site.Params.archives.label | default "ARCHIVES" }}</p>
+        <div class="archives-stats__hero">
+          <span class="archives-stats__count" data-count>{{ $total }}</span>
+          <span class="archives-stats__suffix">篇，始于{{ $oldestYear }}年</span>
+        </div>
+      </header>
+
+      <div class="archives-timeline" id="archives-timeline">
+        {{- range $yi, $yearGroup := $initialYearGroups -}}
+          {{- $year := $yearGroup.Key -}}
+          {{- $yearCount := index $yearCounts $year | default (len $yearGroup.Pages) -}}
+          <section
+            class="archive-year"
+            id="archive-year-{{ $year }}"
+            data-archive-year="{{ $year }}"
+            style="--year-index: {{ $yi }}"
+          >
+            <header class="archive-year__head">
+              <h2 class="archive-year__title">{{ $year }}</h2>
+              <span class="archive-year__count">本年 {{ $yearCount }} 篇</span>
+            </header>
+
+            {{- range $yearGroup.Pages.GroupByDate "01" -}}
+              {{- $monthKey := .Key -}}
+              {{- $monthLabel := index $monthCN $monthKey | default $monthKey -}}
+              {{- $monthEn := index $monthEN $monthKey | default $monthKey -}}
+              <div
+                class="archive-month"
+                id="archive-year-{{ $year }}-month-{{ $monthKey }}"
+                data-archive-month="{{ $year }}-{{ $monthKey }}"
+              >
+                <h3 class="archive-month__title">
+                  <span class="archive-month__cn">{{ $monthLabel }}</span>
+                  <span class="archive-month__sep" aria-hidden="true">·</span>
+                  <span class="archive-month__en">{{ $monthEn }}</span>
+                </h3>
+                <ul class="archive-list">
+                  {{- range .Pages -}}
+                    {{- $cats := .Params.categories | default slice -}}
+                    {{- $cat := cond (gt (len $cats) 0) (index $cats 0) "随笔" -}}
+                    <li class="archive-item" data-archive-item data-post-path="{{ .RelPermalink }}">
+                      <time class="archive-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2" }}</time>
+                      <a class="archive-item__title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+                      <span class="archive-item__cat">
+                        <svg class="archive-item__mark" viewBox="0 0 12 16" width="10" height="13" aria-hidden="true" fill="currentColor">
+                          <path d="M2 0h8a1 1 0 0 1 1 1v14.5a.5.5 0 0 1-.78.414L6 13.5l-4.22 2.414A.5.5 0 0 1 1 15.5V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        {{ $cat }}
+                      </span>
+                    </li>
+                  {{- end -}}
+                </ul>
+              </div>
+            {{- end -}}
+          </section>
+        {{- end -}}
+      </div>
+
+      {{- if $restPosts -}}
+      <div class="archives-load" id="archives-load" data-batch="{{ site.Params.archives.load_batch | default 12 }}" aria-live="polite">
+        <p class="archives-load__status" id="archives-loading" hidden>加载中…</p>
+        <p class="archives-load__status" id="archives-end" hidden>已显示全部归档</p>
+        <div class="archives-load__sentinel" id="archives-sentinel" aria-hidden="true"></div>
+      </div>
+      <script type="application/json" id="archives-meta">{{ dict "yearCounts" $yearCounts | jsonify }}</script>
+      <script type="application/json" id="archives-more">
+        {{- $moreItems := slice -}}
+        {{- range $restPosts -}}
+          {{- $monthKey := .Date.Format "01" -}}
+          {{- $cats := .Params.categories | default slice -}}
+          {{- $moreItems = $moreItems | append (dict
+            "year" (.Date.Format "2006")
+            "month" $monthKey
+            "monthCN" (index $monthCN $monthKey | default $monthKey)
+            "monthEN" (index $monthEN $monthKey | default $monthKey)
+            "day" (.Date.Format "2")
+            "date" (.Date.Format "2006-01-02")
+            "title" .Title
+            "url" .RelPermalink
+            "cat" (cond (gt (len $cats) 0) (index $cats 0) "随笔")
+            "postPath" .RelPermalink
+          ) -}}
+        {{- end -}}
+        {{ $moreItems | jsonify }}
+      </script>
+      {{- end -}}
+    </div>
+  </div>
+
+  <div class="archives-mobile-nav" aria-label="归档快捷导航">
+    <button type="button" class="archives-mobile-nav__btn is-active" data-mobile-tab="years">年份</button>
+    <button type="button" class="archives-mobile-nav__btn" data-mobile-tab="months">月份</button>
+    <button type="button" class="archives-mobile-nav__btn" data-mobile-tab="cats">分类</button>
+    <button type="button" class="archives-mobile-nav__toggle" aria-expanded="false" aria-controls="archives-mobile-panel">
+      导航
+    </button>
+  </div>
+
+  <div class="archives-mobile-panel" id="archives-mobile-panel" hidden>
+    <div class="archives-mobile-panel__pane is-active" data-mobile-pane="years">
+      {{- range $yearGroups -}}
+        <a class="archives-mobile-panel__link" href="#archive-year-{{ .Key }}">{{ .Key }} · {{ len .Pages }} 篇</a>
+      {{- end -}}
+    </div>
+    <div class="archives-mobile-panel__pane" data-mobile-pane="months">
+      {{- range $yearGroups -}}
+        {{- $year := .Key -}}
+        {{- range .Pages.GroupByDate "01" -}}
+          <a class="archives-mobile-panel__link" href="#archive-year-{{ $year }}-month-{{ .Key }}">{{ $year }} · {{ index $monthCN .Key }}</a>
+        {{- end -}}
+      {{- end -}}
+    </div>
+    <div class="archives-mobile-panel__pane" data-mobile-pane="cats">
+      {{- range site.Taxonomies.categories.ByCount -}}
+        <a class="archives-mobile-panel__link" href="{{ "/categories/" | relLangURL }}{{ .Term | urlize }}/">{{ .Term }} · {{ .Count }}</a>
+      {{- end -}}
+    </div>
+  </div>
+</div>
+{{ end }}

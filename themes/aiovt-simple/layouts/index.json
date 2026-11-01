@@ -1,0 +1,34 @@
+{{- $sections := site.Params.search.sections | default (slice "posts" "thoughts") -}}
+{{- $index := slice -}}
+{{- range where site.RegularPages "Section" "in" $sections -}}
+  {{- if not .Params.searchExclude -}}
+    {{- $summary := .Summary | plainify -}}
+    {{- if eq $summary "" -}}
+      {{- $summary = .Description | default "" | plainify -}}
+    {{- end -}}
+    {{- $title := .Title | strings.TrimSpace -}}
+    {{- if eq $title "" -}}
+      {{- with .Params.media.title -}}
+        {{- $title = . | strings.TrimSpace -}}
+      {{- else -}}
+        {{- $line := index (split ($summary | plainify) "\n") 0 -}}
+        {{- $title = $line | truncate 48 -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $url := .RelPermalink -}}
+    {{- if eq .Section "thoughts" -}}
+      {{- $url = "/thoughts/" | relLangURL -}}
+    {{- end -}}
+    {{- if and $url (ne $title "") -}}
+      {{- $index = $index | append (dict
+        "title" $title
+        "url" $url
+        "section" .Section
+        "date" (.Date.Format "2006-01-02")
+        "summary" ($summary | truncate 160)
+        "tags" (.Params.tags | default slice)
+      ) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- dict "pages" $index | jsonify -}}

@@ -1,0 +1,21 @@
+{{- $view := site.Params.home.desktop_posts_view | default "orbit" -}}
+<div class="posts-view" id="posts-view">
+  {{- if eq $view "orbit" -}}
+  {{ partial "orbit-posts.html" . }}
+  {{- end -}}
+  <div class="posts-view__split">
+    <div class="posts-view__main">
+      {{ partial "posts-timeline.html" . }}
+    </div>
+    <aside class="posts-view__aside" aria-label="碎念">
+      {{ partial "home-musings.html" . }}
+      {{ partial "head/home-musings-js.html" . }}
+    </aside>
+  </div>
+  <div class="posts-view__season">
+    {{ partial "season-timeline.html" . }}
+  </div>
+  <div class="posts-view__closing">
+    {{ partial "home-closing.html" . }}
+  </div>
+</div>

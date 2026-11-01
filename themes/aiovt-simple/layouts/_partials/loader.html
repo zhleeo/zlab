@@ -1,0 +1,179 @@
+{{- $loader := site.Params.loader | default dict -}}
+{{- if ($loader.enabled | default true) -}}
+{{- $profile := site.Params.profile -}}
+{{- $min := $loader.min_duration | default 900 -}}
+{{- $max := $loader.max_duration | default 6000 -}}
+{{- $avatar := $profile.avatar -}}
+{{- $avatarURL := $avatar -}}
+{{- if and $avatar (not (or (hasPrefix $avatar "http://") (hasPrefix $avatar "https://") (hasPrefix $avatar "data:"))) -}}
+  {{- $avatarURL = $avatar | relURL -}}
+{{- end -}}
+<script>
+(function () {
+  try {
+    if (sessionStorage.getItem("site-loader-seen") === "1") {
+      document.documentElement.dataset.loaderSkip = "1";
+      document.documentElement.classList.add("is-site-ready");
+      return;
+    }
+  } catch (e) {}
+  document.documentElement.classList.add("is-site-loading");
+})();
+</script>
+<div
+  class="site-loader"
+  id="site-loader"
+  role="status"
+  aria-live="polite"
+  aria-label="页面加载中"
+  data-min-duration="{{ $min }}"
+  data-max-duration="{{ $max }}"
+>
+  <div class="site-loader__stage">
+    {{- /* Ring 1 — inner */ -}}
+    <div class="site-loader__ring-band site-loader__ring-band--1" aria-hidden="true">
+      <div class="site-loader__orbit-tilt site-loader__orbit-tilt--back">
+        <svg class="site-loader__svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="site-loader-ring-grad-1-back" gradientUnits="userSpaceOnUse" x1="70" y1="140" x2="210" y2="140">
+              <stop offset="0%" stop-color="#d4737f" stop-opacity="0.1" />
+              <stop offset="50%" stop-color="#f0a0b0" stop-opacity="0.48" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.1" />
+            </linearGradient>
+          </defs>
+          <path class="site-loader__ring site-loader__ring--back" d="M 70 140 A 70 42 0 1 1 210 140" fill="none" stroke="url(#site-loader-ring-grad-1-back)" stroke-width="1.15" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="site-loader__orbit-tilt site-loader__orbit-tilt--front">
+        <svg class="site-loader__svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="site-loader-ring-grad-1-front" gradientUnits="userSpaceOnUse" x1="70" y1="140" x2="210" y2="140">
+              <stop offset="0%" stop-color="#d4737f" stop-opacity="0.16" />
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.92" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.16" />
+            </linearGradient>
+            <radialGradient id="site-loader-planet-grad-1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" />
+              <stop offset="42%" stop-color="#f0a0b0" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.55" />
+            </radialGradient>
+            <filter id="site-loader-planet-glow-1" x="-160%" y="-160%" width="420%" height="420%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          <path class="site-loader__ring site-loader__ring--front" d="M 70 140 A 70 42 0 1 0 210 140" fill="none" stroke="url(#site-loader-ring-grad-1-front)" stroke-width="1.15" stroke-linecap="round" />
+          <g class="site-loader__planet" data-orbit-cx="140" data-orbit-cy="140" data-orbit-rx="70" data-orbit-ry="42" data-orbit-duration="2100" data-orbit-phase="0" transform="translate(210 140)">
+            <circle class="site-loader__planet-halo" r="7" cx="0" cy="0" fill="#f0a0b0" fill-opacity="0.22" />
+            <circle class="site-loader__planet-core" r="4" cx="0" cy="0" fill="url(#site-loader-planet-grad-1)" filter="url(#site-loader-planet-glow-1)" />
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    {{- /* Ring 2 — middle */ -}}
+    <div class="site-loader__ring-band site-loader__ring-band--2" aria-hidden="true">
+      <div class="site-loader__orbit-tilt site-loader__orbit-tilt--back">
+        <svg class="site-loader__svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="site-loader-ring-grad-2-back" gradientUnits="userSpaceOnUse" x1="48" y1="140" x2="232" y2="140">
+              <stop offset="0%" stop-color="#d4737f" stop-opacity="0.11" />
+              <stop offset="50%" stop-color="#f0a0b0" stop-opacity="0.52" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.11" />
+            </linearGradient>
+          </defs>
+          <path class="site-loader__ring site-loader__ring--back" d="M 48 140 A 92 56 0 1 1 232 140" fill="none" stroke="url(#site-loader-ring-grad-2-back)" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="site-loader__orbit-tilt site-loader__orbit-tilt--front">
+        <svg class="site-loader__svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="site-loader-ring-grad-2-front" gradientUnits="userSpaceOnUse" x1="48" y1="140" x2="232" y2="140">
+              <stop offset="0%" stop-color="#d4737f" stop-opacity="0.17" />
+              <stop offset="18%" stop-color="#f0a0b0" stop-opacity="0.74" />
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.96" />
+              <stop offset="82%" stop-color="#e8919a" stop-opacity="0.7" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.17" />
+            </linearGradient>
+            <radialGradient id="site-loader-planet-grad-2" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" />
+              <stop offset="42%" stop-color="#f0a0b0" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.55" />
+            </radialGradient>
+            <filter id="site-loader-planet-glow-2" x="-160%" y="-160%" width="420%" height="420%">
+              <feGaussianBlur stdDeviation="2.2" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          <path class="site-loader__ring site-loader__ring--front" d="M 48 140 A 92 56 0 1 0 232 140" fill="none" stroke="url(#site-loader-ring-grad-2-front)" stroke-width="1.3" stroke-linecap="round" />
+          <g class="site-loader__planet" data-orbit-cx="140" data-orbit-cy="140" data-orbit-rx="92" data-orbit-ry="56" data-orbit-duration="2700" data-orbit-phase="2.1" transform="translate(232 140)">
+            <circle class="site-loader__planet-halo" r="8.5" cx="0" cy="0" fill="#f0a0b0" fill-opacity="0.24" />
+            <circle class="site-loader__planet-core" r="5" cx="0" cy="0" fill="url(#site-loader-planet-grad-2)" filter="url(#site-loader-planet-glow-2)" />
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    {{- /* Ring 3 — outer */ -}}
+    <div class="site-loader__ring-band site-loader__ring-band--3" aria-hidden="true">
+      <div class="site-loader__orbit-tilt site-loader__orbit-tilt--back">
+        <svg class="site-loader__svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="site-loader-ring-grad-3-back" gradientUnits="userSpaceOnUse" x1="28" y1="140" x2="252" y2="140">
+              <stop offset="0%" stop-color="#d4737f" stop-opacity="0.12" />
+              <stop offset="50%" stop-color="#f0a0b0" stop-opacity="0.55" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.12" />
+            </linearGradient>
+          </defs>
+          <path class="site-loader__ring site-loader__ring--back" d="M 28 140 A 112 68 0 1 1 252 140" fill="none" stroke="url(#site-loader-ring-grad-3-back)" stroke-width="1.45" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="site-loader__orbit-tilt site-loader__orbit-tilt--front">
+        <svg class="site-loader__svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="site-loader-ring-grad-3-front" gradientUnits="userSpaceOnUse" x1="28" y1="140" x2="252" y2="140">
+              <stop offset="0%" stop-color="#d4737f" stop-opacity="0.18" />
+              <stop offset="18%" stop-color="#f0a0b0" stop-opacity="0.78" />
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.98" />
+              <stop offset="82%" stop-color="#e8919a" stop-opacity="0.74" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.18" />
+            </linearGradient>
+            <radialGradient id="site-loader-planet-grad-3" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" />
+              <stop offset="42%" stop-color="#f0a0b0" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#d4737f" stop-opacity="0.55" />
+            </radialGradient>
+            <filter id="site-loader-planet-glow-3" x="-160%" y="-160%" width="420%" height="420%">
+              <feGaussianBlur stdDeviation="2.6" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          <path class="site-loader__ring site-loader__ring--front" d="M 28 140 A 112 68 0 1 0 252 140" fill="none" stroke="url(#site-loader-ring-grad-3-front)" stroke-width="1.45" stroke-linecap="round" />
+          <g class="site-loader__planet" data-orbit-cx="140" data-orbit-cy="140" data-orbit-rx="112" data-orbit-ry="68" data-orbit-duration="3300" data-orbit-phase="4.2" transform="translate(252 140)">
+            <circle class="site-loader__planet-halo" r="10" cx="0" cy="0" fill="#f0a0b0" fill-opacity="0.24" />
+            <circle class="site-loader__planet-core" r="6" cx="0" cy="0" fill="url(#site-loader-planet-grad-3)" filter="url(#site-loader-planet-glow-3)" />
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="site-loader__sun" aria-hidden="true">
+      <div class="site-loader__sun-halo"></div>
+      {{- with $avatarURL }}
+      <img
+        class="site-loader__avatar"
+        src="{{ . }}"
+        alt=""
+        width="76"
+        height="76"
+        decoding="async"
+        fetchpriority="high"
+      >
+      {{- else }}
+      <span class="site-loader__avatar-fallback">{{ substr ($profile.name | default site.Title) 0 1 }}</span>
+      {{- end }}
+    </div>
+  </div>
+  <p class="site-loader__hint visually-hidden">加载中</p>
+</div>
+{{- end -}}

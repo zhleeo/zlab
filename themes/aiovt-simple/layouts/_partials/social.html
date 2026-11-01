@@ -1,0 +1,21 @@
+<div class="social-links">
+  {{- range site.Params.social }}
+    {{- $href := .link -}}
+    {{- $raw := .link -}}
+    {{- if and (not (hasPrefix $raw "http")) (not (hasPrefix $raw "mailto:")) (not (hasPrefix $raw "#")) -}}
+      {{- $href = $raw | relURL -}}
+    {{- end -}}
+    {{- $external := or (hasPrefix $raw "http://") (hasPrefix $raw "https://") -}}
+    <a
+      class="social-links__item"
+      href="{{ $href }}"
+      {{- if $external }} target="_blank" rel="noopener noreferrer"{{ end -}}
+      aria-label="{{ .name }}"
+      {{- with .color }} style="--social-color: {{ . }}"{{ end -}}
+    >
+      {{- with .icon -}}
+        <i class="{{ replace . "ri:" "ri-" }}" aria-hidden="true"></i>
+      {{- end -}}
+    </a>
+  {{- end }}
+</div>

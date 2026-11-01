@@ -1,0 +1,317 @@
+/* ── Tag term page (筛选) ── */
+
+body.is-tag-term,
+body.is-tags-index,
+body.is-category-term,
+body.is-categories-index {
+  background: var(--color-bg);
+}
+
+body.is-tag-term #main,
+body.is-tags-index #main,
+body.is-category-term #main,
+body.is-categories-index #main {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 3.5rem;
+}
+
+body.is-tag-term .hero-bg,
+body.is-tags-index .hero-bg,
+body.is-category-term .hero-bg,
+body.is-categories-index .hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body.is-tag-term .hero-bg::before,
+body.is-tags-index .hero-bg::before,
+body.is-category-term .hero-bg::before,
+body.is-categories-index .hero-bg::before {
+  display: none;
+}
+
+body.is-tag-term .hero-bg__glow,
+body.is-tag-term .hero-bg__ripples,
+body.is-tag-term .hero-bg__bokeh,
+body.is-tags-index .hero-bg__glow,
+body.is-tags-index .hero-bg__ripples,
+body.is-tags-index .hero-bg__bokeh,
+body.is-category-term .hero-bg__glow,
+body.is-category-term .hero-bg__ripples,
+body.is-category-term .hero-bg__bokeh,
+body.is-categories-index .hero-bg__glow,
+body.is-categories-index .hero-bg__ripples,
+body.is-categories-index .hero-bg__bokeh {
+  display: none;
+}
+
+body.is-tag-term #rain-canvas,
+body.is-tag-term .hero-bg__rain,
+body.is-tags-index #rain-canvas,
+body.is-tags-index .hero-bg__rain,
+body.is-category-term #rain-canvas,
+body.is-category-term .hero-bg__rain,
+body.is-categories-index #rain-canvas,
+body.is-categories-index .hero-bg__rain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tag-term-page,
+.tags-index-page {
+  position: relative;
+  width: var(--page-content-width);
+  margin: 0 auto;
+  --tag-heading: var(--color-heading);
+  --tag-title: var(--color-heading);
+  --tag-subheading: var(--color-heading);
+  --tag-border: var(--color-border);
+  --tag-item-hover-bg: var(--color-item-hover-bg);
+  --tag-year-num: var(--color-text-light);
+  --tag-cloud-text: var(--color-text-muted);
+  --tag-cloud-border: var(--color-border);
+  --tag-cloud-hover-bg: var(--color-item-active-bg);
+}
+
+/* ── Header ── */
+
+.tag-term-header__hero {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.tag-term-header__count {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--tag-heading);
+}
+
+.tag-term-header__suffix {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.tag-term-header__tag {
+  font-family: var(--font-sans);
+  font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--tag-subheading);
+  margin-bottom: 1.5rem;
+}
+
+.tag-term-header__rule {
+  border: none;
+  border-top: 1px solid var(--tag-border);
+  margin: 0;
+}
+
+/* ── Year groups ── */
+
+.tag-term-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.tag-term-year {
+  margin-bottom: 2.5rem;
+}
+
+.tag-term-year:last-child {
+  margin-bottom: 0;
+}
+
+.tag-term-year__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.tag-term-year__num {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  color: var(--tag-year-num);
+  line-height: 1;
+}
+
+.tag-term-year__count {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Post rows ── */
+
+.tag-term-list {
+  list-style: none;
+}
+
+.tag-term-item {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.85rem 0.5rem;
+  margin: 0 -0.5rem;
+  border-bottom: 1px dashed var(--tag-border);
+  transition: background 0.2s var(--ease-smooth);
+}
+
+.tag-term-item:hover,
+.tag-term-item:focus-within {
+  background: var(--tag-item-hover-bg);
+}
+
+.tag-term-item__title {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-right: 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--tag-title);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s var(--ease-smooth);
+}
+
+.tag-term-item:hover .tag-term-item__title,
+.tag-term-item:focus-within .tag-term-item__title {
+  color: var(--color-accent-rose);
+}
+
+.tag-term-item__tags {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+}
+
+.tag-term-item__tag {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: var(--color-accent-rose);
+  white-space: nowrap;
+}
+
+.tag-term-item__date {
+  flex: 0 0 auto;
+  margin-left: 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-light);
+  white-space: nowrap;
+}
+
+.tag-term-empty {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* ── Tags index (全部标签) ── */
+
+.tags-index-header__title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.65rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--tag-heading);
+  margin-bottom: 0.35rem;
+}
+
+.tags-index-header__sub {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.tags-index-header__rule {
+  border: none;
+  border-top: 1px solid var(--tag-border);
+  margin: 0;
+}
+
+.tags-index-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.75rem;
+}
+
+.tags-index-cloud__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  padding: 0.35rem 0.65rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--tag-cloud-text);
+  border: 1px solid var(--tag-cloud-border);
+  border-radius: 6px;
+  transition:
+    color 0.2s var(--ease-smooth),
+    border-color 0.2s var(--ease-smooth),
+    background 0.2s var(--ease-smooth);
+}
+
+.tags-index-cloud__item:hover,
+.tags-index-cloud__item:focus-visible {
+  color: var(--color-accent-rose);
+  border-color: rgba(223, 160, 160, 0.45);
+  background: var(--tag-cloud-hover-bg);
+}
+
+.tags-index-cloud__count {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.tags-index-cloud__item:hover .tags-index-cloud__count,
+.tags-index-cloud__item:focus-visible .tags-index-cloud__count {
+  color: var(--color-accent-rose);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 767px) {
+  body.is-tag-term #main,
+  body.is-tags-index #main,
+  body.is-category-term #main,
+  body.is-categories-index #main {
+    padding-bottom: 2.5rem;
+  }
+
+  .tag-term-item__title {
+    font-size: 0.875rem;
+    margin-right: 0.85rem;
+  }
+
+  .tag-term-item__tag,
+  .tag-term-item__date {
+    font-size: 0.625rem;
+  }
+}

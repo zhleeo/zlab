@@ -1,0 +1,52 @@
+{{ define "main" }}
+{{- $cfg := site.Params.friends | default dict -}}
+{{- $title := $cfg.title | default "朋友们" -}}
+{{- $subtitle := $cfg.subtitle | default "海内存知己，天涯若比邻。" -}}
+{{- $groups := hugo.Data.friends.groups | default slice -}}
+
+<div class="friends-page is-visible" data-friends>
+  {{ partial "background.html" . }}
+
+  <div class="friends-page__content">
+    <header class="friends-header page-header">
+      <p class="page-header__label">{{ $cfg.label | default "LINKS" }}</p>
+      <h1 class="page-header__title">{{ $title }}</h1>
+      <p class="page-header__sub">{{ $subtitle }}</p>
+    </header>
+
+    {{- range $gi, $group := $groups }}
+    <section class="friends-group" style="--group-index: {{ $gi }}">
+      <header class="friends-group__head">
+        <h2 class="friends-group__title">
+          <span class="friends-group__pin" aria-hidden="true">📌</span>
+          {{ $group.name }}
+        </h2>
+        {{- with $group.desc }}
+        <p class="friends-group__desc">
+          <span class="friends-group__desc-label">分类描述 🌸：</span>{{ . }}
+        </p>
+        {{- end }}
+      </header>
+
+      <div class="friends-grid" data-friends-grid>
+        {{- range $i, $item := $group.links }}
+          {{- if not ($item.pinLast | default false) }}
+            {{ partial "friend-card.html" (dict "Item" $item "Index" $i) }}
+          {{- end }}
+        {{- end }}
+        {{- range $i, $item := $group.links }}
+          {{- if ($item.pinLast | default false) }}
+            {{ partial "friend-card.html" (dict "Item" $item "Index" $i "PinLast" true) }}
+          {{- end }}
+        {{- end }}
+      </div>
+    </section>
+    {{- else }}
+    <p class="friends-empty">暂无友链，稍后再来看看。</p>
+    {{- end }}
+
+    {{ partial "friends-notice.html" . }}
+    {{ partial "friends-comments.html" . }}
+  </div>
+</div>
+{{ end }}

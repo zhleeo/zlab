@@ -1,0 +1,81 @@
+{{- $cfg := site.Params.friends | default dict -}}
+{{- $notice := $cfg.notice | default dict -}}
+{{- if ($notice.enabled | default true) -}}
+{{- $rules := $notice.rules | default slice -}}
+{{- if not $rules -}}
+  {{- $rules = slice
+    (dict "icon" "🎉" "text" "本站支持交换友链，在您提出申请之前，请将本站添加到友链")
+    (dict "icon" "☕" "text" "为了保障本站用户，本站仅支持个人网站的友链申请")
+    (dict "icon" "💡" "text" "申请本站友链需要拥有独立域名（非免费域名），建议开启全站 HTTPS")
+    (dict "icon" "⏳" "text" "如果友情链接已经添加，请保持网站的正常访问，会定期清理僵尸网站")
+    (dict "icon" "🐚" "text" "网站有一定的实质性内容和主题，不能是空壳网站和练手网站")
+    (dict "icon" "💕" "text" "感谢您对本站的支持，如果您已经满足上述要求，请在下方表单提交友链申请~~~")
+  -}}
+{{- end -}}
+{{- $siteInfo := $notice.site | default dict -}}
+{{- $siteName := $siteInfo.name | default site.Params.profile.name | default site.Title -}}
+{{- $siteURL := $siteInfo.url | default site.BaseURL | absURL -}}
+{{- $siteAvatar := $siteInfo.avatar | default site.Params.profile.avatar -}}
+{{- if and $siteAvatar (not (or (hasPrefix $siteAvatar "http://") (hasPrefix $siteAvatar "https://") (hasPrefix $siteAvatar "data:"))) -}}
+  {{- $siteAvatar = $siteAvatar | absURL -}}
+{{- end -}}
+{{- $siteDesc := $siteInfo.description | default site.Params.description -}}
+{{- $siteShot := $siteInfo.siteshot | default $notice.siteshot -}}
+{{- if and $siteShot (not (or (hasPrefix $siteShot "http://") (hasPrefix $siteShot "https://") (hasPrefix $siteShot "data:"))) -}}
+  {{- $siteShot = $siteShot | absURL -}}
+{{- end -}}
+{{- $infoTitle := $notice.info_title | default "本站友链信息如下：" -}}
+
+<aside class="friends-notice" aria-label="友链公告">
+  <div class="friends-notice__rail" aria-hidden="true">
+    <span class="friends-notice__rail-line"></span>
+    <span class="friends-notice__rail-btn">+</span>
+  </div>
+
+  <div class="friends-notice__body">
+    <ul class="friends-notice__rules">
+      {{- range $rules -}}
+        <li>
+          {{- with .icon -}}<span class="friends-notice__icon" aria-hidden="true">{{ . }}</span>{{- end -}}
+          <span class="friends-notice__text">{{ .text }}</span>
+        </li>
+      {{- end -}}
+    </ul>
+
+    <hr class="friends-notice__divider">
+
+    <div class="friends-notice__info">
+      <p class="friends-notice__info-title">
+        <span class="friends-notice__info-pin" aria-hidden="true">📍</span>
+        {{ $infoTitle }}
+      </p>
+      <ul class="friends-notice__info-list">
+        <li>
+          <span class="friends-notice__label">站点名称：</span>
+          <span class="friends-notice__val">{{ $siteName }}</span>
+        </li>
+        <li>
+          <span class="friends-notice__label">站点链接：</span>
+          <span class="friends-notice__val">{{ $siteURL }}</span>
+        </li>
+        {{- with $siteAvatar -}}
+        <li>
+          <span class="friends-notice__label">站长头像：</span>
+          <span class="friends-notice__val">{{ . }}</span>
+        </li>
+        {{- end -}}
+        <li>
+          <span class="friends-notice__label">站点描述：</span>
+          <span class="friends-notice__val">{{ $siteDesc }}</span>
+        </li>
+        {{- with $siteShot -}}
+        <li>
+          <span class="friends-notice__label">站点截图：</span>
+          <span class="friends-notice__val">{{ . }}</span>
+        </li>
+        {{- end -}}
+      </ul>
+    </div>
+  </div>
+</aside>
+{{- end -}}
