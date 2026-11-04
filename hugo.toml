@@ -1,4 +1,4 @@
-baseURL = 'https://leeozhang.com/'
+baseURL = 'https://zhleeo.github.io/zlab/'
 defaultContentLanguage = 'zh-cn'
 locale = 'zh-cn'
 timeZone = 'Asia/Shanghai'
@@ -45,7 +45,7 @@ theme = 'aiovt-simple'
     max_duration = 6000
 
   [params.post]
-    default_cover = '/img/default-post-cover.svg'
+    default_cover = 'img/default-post-cover.svg'
 
   [params.home]
     desktop_posts_view = 'orbit'
