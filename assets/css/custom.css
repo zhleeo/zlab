@@ -84,3 +84,7 @@
   width: 110px !important;
   height: 110px !important;
 }
+
+.post-cover__img {
+  height: clamp(60px, 12vw, 130px);
+}
