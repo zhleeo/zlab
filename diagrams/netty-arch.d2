@@ -1,0 +1,17 @@
+direction: down
+
+boss: "Boss EventLoopGroup (1个EventLoop)" {
+  style.fill: "#fce4e4"
+  el_boss: "EventLoop Thread-1\n只做 OP_ACCEPT" {style.fill: "#ffcdd2"}
+}
+
+worker: "Worker EventLoopGroup (N个EventLoop)" {
+  style.fill: "#e8ecf1"
+  el_w1: "EventLoop Thread-2" {style.fill: "#e4ecfa"}
+  el_w2: "EventLoop Thread-3" {style.fill: "#e4ecfa"}
+  pipeline: "ChannelPipeline\nDecoder → Handler → Encoder" {style.fill: "#e4fae4"}
+}
+
+boss -> worker: "accept 后轮询分配给 Worker"
+el_w1 -> pipeline: 绑定 Channel
+el_w2 -> pipeline: 绑定 Channel

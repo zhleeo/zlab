@@ -1,0 +1,21 @@
+# NIO Selector 多路复用原理
+direction: down
+
+Selector: "Selector\n单线程 select()" {
+  shape: cylinder
+  style.fill: "#e4ecfa"
+}
+
+Selector -> SocketCh1: OP_READ
+Selector -> SocketCh2: 空闲
+Selector -> SocketCh3: OP_WRITE
+
+SocketCh1 -> ByteBuffer1: 读数据 -> 业务处理
+SocketCh3 -> ByteBuffer2: 写数据 -> 业务处理
+
+SocketCh1.shape: rectangle
+SocketCh2.shape: rectangle
+SocketCh3.shape: rectangle
+SocketCh1.style.fill: "#e4fae4"
+SocketCh2.style.fill: "#e8ecf1"
+SocketCh3.style.fill: "#fce4e4"

@@ -1,0 +1,26 @@
+direction: down
+vertical-gap: 34
+
+data: "应用数据\nGET /index.html" {
+  style.fill: "#e3f2fd"
+  style.stroke: "#64b5f6"
+}
+
+seg: "传输层：加 TCP 头 → TCP 段\n[ TCP 头 | 应用数据 ]" {
+  style.fill: "#fff3e0"
+  style.stroke: "#ffb74d"
+}
+
+pkt: "网络层：加 IP 头 → IP 包\n[ IP 头 | TCP 头 | 应用数据 ]" {
+  style.fill: "#fff8e1"
+  style.stroke: "#ffca28"
+}
+
+frame: "链路层：加帧头帧尾 → 以太网帧\n[ 以太网头 | IP 头 | TCP 头 | 应用数据 | 帧尾 ]" {
+  style.fill: "#fce4ec"
+  style.stroke: "#f06292"
+}
+
+data -> seg
+seg -> pkt
+pkt -> frame

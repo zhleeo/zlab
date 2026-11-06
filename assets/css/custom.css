@@ -88,3 +88,47 @@
 .post-cover__img {
   height: clamp(60px, 12vw, 130px);
 }
+
+.diagram-figure {
+  margin: 2rem auto;
+  text-align: center;
+  background: #f8f9fb;
+  border: 1px solid #e8ecf1;
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 0.75rem;
+  overflow-x: auto;
+}
+
+.diagram-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.diagram-figure figcaption {
+  margin-top: 0.625rem;
+  font-size: 0.85rem;
+  color: #7a7f8a;
+  font-style: italic;
+}
+
+.post-body blockquote {
+  font-style: normal;
+  color: var(--color-text);
+  line-height: 1.75;
+}
+
+:root {
+  --page-content-max: 820px;
+}
+
+@media (min-width: 768px) {
+  .post {
+    max-width: 920px;
+  }
+
+  .post-sheet {
+    --post-column: 52em;
+  }
+}

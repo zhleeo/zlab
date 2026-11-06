@@ -1,0 +1,23 @@
+@startuml
+!include _theme.iuml
+
+participant "客户端" as C #E3F2FD
+participant "服务端" as S #E8F5E9
+
+S -> S : ① socket() → bind(:8080) → listen()
+note right of S : 得到监听 Socket\n只负责 accept()，不承载数据
+
+C -> S : ② connect()  触发三次握手
+activate S
+note right of S : 握手由内核完成\naccept() 只取走握手完成的连接
+
+S -> S : ③ accept() 返回新连接 Socket
+note right of S : 新 fd 与监听 fd 不同\n由四元组唯一标识
+
+C -> S : ④ write() / send()  发送请求
+S -> C : ⑤ read() 读到数据 → 处理 → 响应
+
+C -> S : ⑥ close()  触发四次挥手
+deactivate S
+note right of S : 若忘记 close()\n连接停在 CLOSE_WAIT 不消失
+@enduml

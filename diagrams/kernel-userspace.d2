@@ -1,0 +1,21 @@
+direction: down
+
+user: "用户空间 Ring 3" {
+  进程: "应用程序" {style.fill: "#e3f2fd"}
+  buf: "用户缓冲区 Heap Buffer" {style.fill: "#e3f2fd"}
+  进程 -> buf: 数据写入用户缓冲区
+}
+
+kernel: "内核空间 Ring 0" {
+  sk_buf: "Socket 接收缓冲区" {style.fill: "#fff3e0"}
+  proto: "TCP/IP 协议栈" {style.fill: "#fff3e0"}
+  driver: "网卡驱动程序" {style.fill: "#fff3e0"}
+  sk_buf -> proto -> driver: 协议栈逐层处理
+}
+
+syscall: "read() 系统调用: 数据从 Socket 缓冲区拷贝到用户缓冲区" {
+  style.fill: "#fce4ec"
+}
+
+user -> syscall
+syscall -> kernel

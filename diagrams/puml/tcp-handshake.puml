@@ -1,0 +1,18 @@
+@startuml
+!include _theme.iuml
+
+participant "客户端" as C #E3F2FD
+participant "服务端" as S #E8F5E9
+
+C -> S : ① SYN   seq=x
+note right of S : 记下对方 ISN=x\n进入 SYN_RECV\n占用 SYN 队列
+
+S -> C : ② SYN+ACK   seq=y, ack=x+1
+note left of C : 得知对方 ISN=y\n自己的 SYN 已被确认
+
+C -> S : ③ ACK   ack=y+1
+note left of C : 立即进入 ESTABLISHED\n不等服务端确认
+note right of S : 收到后进入 ESTABLISHED\n连接移入 ACCEPT 队列
+
+note over C, S : 建连耗时 1 个 RTT（SYN 发出 → SYN+ACK 返回）\n第三个 ACK 可与首个数据包同发
+@enduml

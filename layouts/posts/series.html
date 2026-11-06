@@ -1,0 +1,36 @@
+{{ define "main" }}
+{{- $pages := .RegularPagesRecursive.ByWeight -}}
+<div class="posts-list-page" data-posts-list>
+  {{ partial "background.html" . }}
+
+  <div class="posts-list-layout">
+    <div class="posts-list-main">
+      <header class="posts-list-header page-header">
+        <p class="page-header__label">{{ .Params.label | default "SERIES" }}</p>
+        <h1 class="page-header__title">{{ .Title }}</h1>
+        {{- with .Params.description }}
+          <p class="page-header__sub">{{ . }}</p>
+        {{- end }}
+      </header>
+
+      {{- with .Content }}
+        <div class="post-body">{{ . }}</div>
+      {{- end }}
+
+      <div class="posts-list-toolbar">
+        <div class="posts-list-toolbar__row">
+          <span class="posts-list-toolbar__count">共 <em>{{ len $pages }}</em> 篇</span>
+        </div>
+      </div>
+
+      <div class="posts-list-items">
+        {{- range $pages -}}
+          {{ partial "posts-list-item.html" (dict "Page" .) }}
+        {{- else -}}
+          <p class="posts-list-empty">暂无文章</p>
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

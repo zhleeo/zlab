@@ -1,0 +1,24 @@
+skinparam defaultFontName "PingFang SC"
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam sequenceMessageAlign center
+skinparam ParticipantPadding 24
+skinparam BoxPadding 10
+skinparam ArrowColor #455A64
+skinparam ArrowThickness 1.2
+skinparam LifeLineBorderColor #90A4AE
+
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #D8C57A
+skinparam NoteFontColor #4E3B00
+
+skinparam sequence {
+  ParticipantBackgroundColor #ECEFF1
+  ParticipantBorderColor #B0BEC5
+  ParticipantFontColor #263238
+  GroupBorderColor #B0BEC5
+  GroupBackgroundColor #F7F9FC
+  GroupHeaderFontColor #37474F
+  GroupHeaderFontSize 12
+}

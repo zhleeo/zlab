@@ -1,0 +1,7 @@
+# 网络数据读取路径
+direction: right
+
+应用程序 -> Socket接收缓冲区: read() 系统调用
+Socket接收缓冲区 -> 内核协议栈: TCP/IP 处理
+内核协议栈 -> DMA控制器
+DMA控制器 -> 网卡硬件: 数据到达

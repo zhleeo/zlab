@@ -1,0 +1,42 @@
+# I/O 模型选型决策树
+direction: down
+
+需要高并发?: "需要高并发?\n(> 5000 连接)" {
+  shape: diamond
+  style.fill: "#fce4e4"
+}
+
+需要高并发? -> 极致性能: 是
+需要高并发? -> 追求开发效率: 否
+
+极致性能: "极致性能要求?\n(C100K / P99<5ms)" {
+  shape: diamond
+  style.fill: "#fce4e4"
+}
+
+极致性能 -> Netty方案: 是
+极致性能 -> 均可: 否
+
+追求开发效率: "追求开发效率?" {
+  shape: diamond
+  style.fill: "#e4ecfa"
+}
+
+追求开发效率 -> 虚拟线程方案: 是
+追求开发效率 -> Netty生态: 否
+
+Netty方案: "Netty + epoll\n成熟稳定" {
+  style.fill: "#e4fae4"
+}
+
+均可: "Netty / 虚拟线程 BIO\n均可, 压测决定" {
+  style.fill: "#e4fae4"
+}
+
+虚拟线程方案: "虚拟线程 + BIO\n同步代码, 心智负担低" {
+  style.fill: "#e4fae4"
+}
+
+Netty生态: "Netty\n生态丰富, 久经考验" {
+  style.fill: "#e4fae4"
+}

@@ -1,0 +1,30 @@
+direction: down
+
+listen: "监听 Socket  fd=3\n绑定 0.0.0.0:8080\n只负责 accept()，不承载数据" {
+  style.fill: "#e3f2fd"
+  style.stroke: "#64b5f6"
+}
+
+c1: "连接 Socket  fd=4\n192.168.1.10:54321 → 10.0.0.1:8080" {
+  style.fill: "#c8e6c9"
+  style.stroke: "#66bb6a"
+}
+c2: "连接 Socket  fd=5\n192.168.1.11:12345 → 10.0.0.1:8080" {
+  style.fill: "#c8e6c9"
+  style.stroke: "#66bb6a"
+}
+c3: "连接 Socket  fd=6\n10.0.0.5:33445 → 10.0.0.1:8080" {
+  style.fill: "#c8e6c9"
+  style.stroke: "#66bb6a"
+}
+
+listen -> c1: "accept()"
+listen -> c2: "accept()"
+listen -> c3: "accept()"
+
+note: "每条连接由四元组唯一标识\n(源 IP, 源端口, 目标 IP, 目标端口)" {
+  style.fill: "#fff8e1"
+  style.stroke: "#ffca28"
+}
+
+c2 -> note

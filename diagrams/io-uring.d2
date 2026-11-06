@@ -1,0 +1,24 @@
+# io_uring 共享环形缓冲区
+direction: right
+
+用户空间: {
+  Submission Queue: "SQ\n提交队列" {
+    style.fill: "#e4ecfa"
+  }
+  Completion Queue: "CQ\n完成队列" {
+    style.fill: "#e4fae4"
+  }
+}
+
+内核空间: {
+  io_uring 实例: "异步 I/O 引擎" {
+    style.fill: "#e8ecf1"
+  }
+}
+
+Submission Queue <-> io_uring 实例: 共享内存 {
+  style.stroke-dash: 3
+}
+Completion Queue <-> io_uring 实例: 共享内存 {
+  style.stroke-dash: 3
+}

@@ -1,0 +1,21 @@
+@startuml
+!include _theme.iuml
+
+participant "主动关闭方" as A #E3F2FD
+participant "被动关闭方" as B #FFE0B2
+
+group 阶段一：只关闭「主动方 → 被动方」这个方向
+  A -> B : ① FIN   seq=u
+  note right of B : 进入 CLOSE_WAIT\n对方这个方向不再发数据\n我仍可继续发送剩余数据
+  B -> A : ② ACK   ack=u+1
+  note left of A : 进入 FIN_WAIT_2\n等待对方也关闭
+end
+
+group 阶段二：被动方发完剩余数据，再关闭反向
+  B -> A : ③ FIN   seq=w, ack=u+1
+  A -> B : ④ ACK   ack=w+1
+  note right of B : 进入 CLOSED
+end
+
+note over A : TIME-WAIT 等 2MSL（Linux 60s）\n保证末次 ACK 送达 + 旧连接报文消亡
+@enduml

@@ -1,0 +1,4 @@
+<figure class="diagram-figure">
+  <img src="{{ printf "images/diagrams/%s" (.Get 0) | relURL }}" alt="{{ .Get 1 }}" loading="lazy" />
+  <figcaption>{{ .Get 1 }}</figcaption>
+</figure>
