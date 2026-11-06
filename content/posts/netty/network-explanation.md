@@ -308,9 +308,3 @@ macOS 没有 `ss` 和 `strace`：查看监听与连接用 `lsof -nP -iTCP:8080` 
 - [RFC 9293 — Transmission Control Protocol (TCP)](https://www.rfc-editor.org/rfc/rfc9293.html)，现行 TCP 标准，已取代 RFC 793
 - [RFC 793 — Transmission Control Protocol](https://www.rfc-editor.org/rfc/rfc793.html)，三次握手的原始论证见 §3.4 Establishing a connection
 - [Linux IP Sysctl 文档](https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html)，`tcp_max_syn_backlog`、`tcp_abort_on_overflow`、`tcp_tw_reuse` 的官方说明
-
-## 本系列其他文章
-
-- [I/O 基础理论]({{< ref "/posts/netty/network-io-theory" >}})：两阶段模型，同步 / 异步 / 阻塞 / 非阻塞
-- [I/O 模型原理]({{< ref "/posts/netty/network-io-models" >}})：BIO、epoll、io_uring
-- [I/O 编程实战]({{< ref "/posts/netty/network-io-practice" >}})：三种模型的完整代码
