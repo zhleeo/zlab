@@ -1,7 +1,7 @@
 ---
 date: '2026-11-02'
 draft: false
-title: '周赛 526-4. 具有偶数异或奇偶性的最小成本路径'
+title: '单周赛 526-4. 具有偶数异或奇偶性的最小成本路径'
 categories: ['算法']
 tags: ['LeetCode', '树形DP', 'DFS']
 ---
@@ -9,7 +9,7 @@ tags: ['LeetCode', '树形DP', 'DFS']
 ## 题目信息
 
 <table width="100%" style="display:table"><colgroup><col width="70"><col></colgroup><tbody>
-<tr><td>🔗 链接</td><td><a href="https://leetcode.cn/problems/minimum-cost-path-with-even-xor-parity/description/">LeetCode 周赛 526-4</a></td></tr>
+<tr><td>🔗 链接</td><td><a href="https://leetcode.cn/problems/minimum-cost-path-with-even-xor-parity/description/">LeetCode 单周赛 526-4</a></td></tr>
 <tr><td>🏷 难度</td><td><strong>困难</strong></td></tr>
 <tr><td>📌 标签</td><td>树形DP · DFS</td></tr>
 </tbody></table>

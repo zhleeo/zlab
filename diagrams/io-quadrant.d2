@@ -1,17 +1,25 @@
-# 同步/异步 x 阻塞/非阻塞 四象限
-
+# 同步/异步 × 阻塞/非阻塞 四象限
+direction: right
 grid-rows: 2
 grid-columns: 2
+grid-gap: 0
 
-同步阻塞: "同步阻塞\nBIO" {
-  style.fill: "#fce4e4"
+sync-block: {
+  label: "同步阻塞\nBIO / 传统 read()"
+  style.fill: "#ffcdd2"
 }
-异步阻塞: "异步阻塞\n(几乎不存在)" {
-  style.fill: "#e8ecf1"
+
+async-block: {
+  label: "异步阻塞\n（几乎不存在）\n——都异步了\n还让线程等着\n没有意义"
+  style.fill: "#e0e0e0"
 }
-同步非阻塞: "同步非阻塞\nNIO / epoll" {
-  style.fill: "#e4ecfa"
+
+sync-nonblock: {
+  label: "同步非阻塞\nNIO / epoll / kqueue"
+  style.fill: "#bbdefb"
 }
-异步非阻塞: "异步非阻塞\nAIO / io_uring" {
-  style.fill: "#e4fae4"
+
+async-nonblock: {
+  label: "异步非阻塞\nAIO / io_uring"
+  style.fill: "#c8e6c9"
 }

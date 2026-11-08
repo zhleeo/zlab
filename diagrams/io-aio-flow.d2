@@ -1,0 +1,53 @@
+# AIO / io_uring — 异步非阻塞（阶段1不等 + 阶段2内核拷）
+
+direction: down
+
+call: "线程调用 io_uring_submit(sqe)\n→ 提交一个读请求到 SQ\n→ **立刻返回**" {
+  style.fill: "#e8eaf6"
+}
+
+fork: {
+  style.fill: "#f5f5f5"
+
+  user: {
+    label: "线程（全程不堵）"
+    style.fill: "#e8f5e9"
+
+    work: "线程继续跑业务代码\n处理其他请求、算东西\n完全不碰 I/O\n状态始终 TASK_RUNNING" {
+      style.fill: "#c8e6c9"
+    }
+  }
+
+  kernel: {
+    label: "内核后台（全自动）"
+    style.fill: "#e3f2fd"
+
+    stage1: "阶段1：等数据\n→ 数据到达 Socket buf" {
+      style.fill: "#fff3e0"
+    }
+
+    stage2: "阶段2：拷贝数据\nSocket buf → 用户 buf\n→ 线程不参与" {
+      style.fill: "#90caf9"
+    }
+
+    stage1 -> stage2
+  }
+}
+
+done: "内核写入 CQ：完成事件\n（数据已在用户 buf 中）" {
+  style.fill: "#bbdefb"
+}
+
+check: "线程忙完了，看一眼 CQ\nio_uring_peek_cqe() → 读请求已完成" {
+  style.fill: "#a5d6a7"
+}
+
+ret: "buf 里数据就绪\n全程线程没有一次睡眠等待\n也没有一次主动拷贝" {
+  style.fill: "#81c784"
+}
+
+call -> fork.user.work
+call -> fork.kernel.stage1
+fork -> done
+done -> check
+check -> ret

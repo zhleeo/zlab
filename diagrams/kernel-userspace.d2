@@ -1,21 +1,38 @@
 direction: down
 
 user: "用户空间 Ring 3" {
-  进程: "应用程序" {style.fill: "#e3f2fd"}
-  buf: "用户缓冲区 Heap Buffer" {style.fill: "#e3f2fd"}
-  进程 -> buf: 数据写入用户缓冲区
+  进程: "应用程序 (Java 进程)" {
+    style.fill: "#c8e6c9"
+  }
+  buf: "用户 Buffer\n(heap/off-heap)" {
+    style.fill: "#a5d6a7"
+  }
+}
+
+syscall: "系统调用边界" {
+  style.fill: "#fce4ec"
+  style.stroke: "#d32f2f"
+  style.stroke-dash: 5
 }
 
 kernel: "内核空间 Ring 0" {
-  sk_buf: "Socket 接收缓冲区" {style.fill: "#fff3e0"}
-  proto: "TCP/IP 协议栈" {style.fill: "#fff3e0"}
-  driver: "网卡驱动程序" {style.fill: "#fff3e0"}
-  sk_buf -> proto -> driver: 协议栈逐层处理
+  sk_buf: "Socket 接收缓冲区" {
+    style.fill: "#bbdefb"
+  }
+  proto: "TCP/IP 协议栈" {
+    style.fill: "#90caf9"
+  }
+  driver: "网卡驱动程序" {
+    style.fill: "#64b5f6"
+  }
 }
 
-syscall: "read() 系统调用: 数据从 Socket 缓冲区拷贝到用户缓冲区" {
-  style.fill: "#fce4ec"
+app_buf: "③ 数据在用户 Buffer 中\n可供应用代码读写" {
+  style.fill: "#e8f5e9"
 }
 
-user -> syscall
-syscall -> kernel
+进程 -> buf: 持有 Buffer 引用
+buf -> syscall: 调用 read(fd, buf, size)
+syscall -> kernel: ② 陷入内核，\nCPU 切到 Ring 0
+sk_buf -> app_buf: ③ 数据拷贝到用户空间
+driver -> proto -> sk_buf: ① 网卡数据逐层\n上送到 Socket 缓冲区

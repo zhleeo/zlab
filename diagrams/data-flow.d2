@@ -1,7 +1,23 @@
-# 网络数据读取路径
-direction: right
+# 网络数据从网卡到应用程序的完整路径
+direction: down
 
-应用程序 -> Socket接收缓冲区: read() 系统调用
-Socket接收缓冲区 -> 内核协议栈: TCP/IP 处理
-内核协议栈 -> DMA控制器
-DMA控制器 -> 网卡硬件: 数据到达
+NIC: 网卡 (NIC) {
+  style.fill: "#f3e5f5"
+}
+DMA: DMA 控制器\n零拷贝写入内存 {
+  style.fill: "#ede7f6"
+}
+kernel: 内核协议栈\nTCP/IP 拆包校验 {
+  style.fill: "#e3f2fd"
+}
+sk_buf: Socket 接收缓冲区\n内核空间 {
+  style.fill: "#bbdefb"
+}
+app: 应用程序 Buffer\n用户空间 {
+  style.fill: "#c8e6c9"
+}
+
+NIC -> DMA: ① 帧到达网卡，DMA 直接把数据\n写入内核环形缓冲区
+DMA -> kernel: ② 内核协议栈处理 IP/TCP 头，\n校验序列号、去重、排序
+kernel -> sk_buf: ③ 裸数据挂到对应 Socket\n的接收队列
+sk_buf -> app: ④ read() 把数据从内核\n拷贝到用户空间 Buffer

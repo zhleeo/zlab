@@ -1,0 +1,51 @@
+# 异步阻塞 — 为什么几乎不存在
+
+direction: down
+
+explain: "异步阻塞：线程先调异步 API 提交请求（阶段1不堵），\n然后立刻调用 wait/semaphore 堵着等结果（阶段2堵）\n→ 跟直接用同步 read() 效果一样，但多了一次 API 调用\n→ 所有 I/O 框架都不提供这个组合" {
+  style.fill: "#fce4ec"
+}
+
+call: "线程调用 aio_read(buf) → **立刻返回**\n（异步 API：不等数据）" {
+  style.fill: "#e8eaf6"
+}
+
+fork: {
+  style.fill: "#f5f5f5"
+
+  user: {
+    label: "线程这边"
+    style.fill: "#e8f5e9"
+
+    block: "线程调 sem_wait() 或类似接口\n→ **堵着等**内核通知\n→ 线程状态：TASK_INTERRUPTIBLE\n→ 线程占着 ~1MB 栈\n→ **什么都干不了**" {
+      style.fill: "#fff3e0"
+    }
+  }
+
+  kernel: {
+    label: "内核后台"
+    style.fill: "#e3f2fd"
+
+    work: "内核等数据 → 数据到了\n→ 拷贝到用户 buf\n→ 发信号/写 eventfd 通知线程" {
+      style.fill: "#bbdefb"
+    }
+  }
+}
+
+wake: "内核完成 → 唤醒线程\nsem_wait() 返回" {
+  style.fill: "#c8e6c9"
+}
+
+why: {
+  label: "那你为什么不直接用同步 read()？"
+  style.fill: "#ffcdd2"
+
+  detail: "同步 read()：堵在 read() 内部\n异步阻塞：堵在 sem_wait() 上\n→ 结果完全一样 —— 线程从调用到拿到数据，一直是堵的\n→ 白白多了一次异步 API 调用的复杂度\n→ 没有任何性能收益" {
+    style.fill: "#ef9a9a"
+  }
+}
+
+call -> fork.user.block
+call -> fork.kernel.work
+fork -> wake
+wake -> why

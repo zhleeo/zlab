@@ -1,0 +1,46 @@
+# BIO — 同步阻塞（阶段1等 + 阶段2自己拷）
+
+direction: down
+
+call: "线程调用 read(fd, buf, size)" {
+  style.fill: "#e8eaf6"
+}
+
+stage1: {
+  label: "阶段1：等待数据"
+  style.fill: "#fff3e0"
+
+  t1: "线程 → TASK_INTERRUPTIBLE\n挂起、让出 CPU、不消耗 CPU\n但占着 ~1MB 栈内存" {
+    style.fill: "#ffe0b2"
+  }
+
+  k1: "内核：数据还在路上\nSocket 缓冲区是空的" {
+    style.fill: "#ffcc80"
+  }
+}
+
+arrived: "数据到达 Socket 缓冲区\n内核唤醒此线程" {
+  style.fill: "#c8e6c9"
+}
+
+stage2: {
+  label: "阶段2：拷贝数据"
+  style.fill: "#e3f2fd"
+
+  t2: "线程 → TASK_RUNNING\n线程参与拷贝（~5μs）\nCPU 这段时间不能干别的" {
+    style.fill: "#90caf9"
+  }
+
+  k2: "内核：Socket buf → 用户 buf\nmemcpy 执行中" {
+    style.fill: "#64b5f6"
+  }
+}
+
+ret: "read() 返回 → buf 里有数据" {
+  style.fill: "#a5d6a7"
+}
+
+call -> stage1.t1
+stage1 -> arrived
+arrived -> stage2.k2 -> stage2.t2
+stage2 -> ret

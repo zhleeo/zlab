@@ -102,8 +102,17 @@
 .diagram-figure img {
   display: block;
   max-width: 100%;
+  max-height: 600px;
   height: auto;
   margin: 0 auto;
+}
+
+.diagram-figure--sm img {
+  max-width: 55%;
+}
+
+.diagram-figure--md img {
+  max-width: 75%;
 }
 
 .diagram-figure figcaption {
