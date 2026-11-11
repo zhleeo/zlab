@@ -1,21 +1,31 @@
 # NIO Selector 多路复用原理
 direction: down
 
-Selector: "Selector\n单线程 select()" {
-  shape: cylinder
-  style.fill: "#e4ecfa"
+Selector: {
+  label: "Selector\n单线程事件循环（select()）"
+  style.fill: "#E3E9FD"
 }
 
-Selector -> SocketCh1: OP_READ
-Selector -> SocketCh2: 空闲
-Selector -> SocketCh3: OP_WRITE
+Selector -> ch1: OP_READ 就绪
+Selector -> ch2: 空闲（无就绪事件）
+Selector -> ch3: OP_WRITE 就绪
 
-SocketCh1 -> ByteBuffer1: 读数据 -> 业务处理
-SocketCh3 -> ByteBuffer2: 写数据 -> 业务处理
+ch1: SocketChannel-1 {
+  style.fill: "#E8F5E9"
+}
+ch2: SocketChannel-2 {
+  style.fill: "#F7F8FE"
+}
+ch3: SocketChannel-3 {
+  style.fill: "#E8F5E9"
+}
 
-SocketCh1.shape: rectangle
-SocketCh2.shape: rectangle
-SocketCh3.shape: rectangle
-SocketCh1.style.fill: "#e4fae4"
-SocketCh2.style.fill: "#e8ecf1"
-SocketCh3.style.fill: "#fce4e4"
+ch1 -> buf1: read() 读取到用户态
+ch3 -> buf2: write() 从用户态写出
+
+buf1: ByteBuffer {
+  style.fill: "#EEF1F8"
+}
+buf2: ByteBuffer {
+  style.fill: "#EEF1F8"
+}

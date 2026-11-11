@@ -1,24 +1,34 @@
-# io_uring 共享环形缓冲区
+# io_uring 共享环形缓冲区架构
 direction: right
 
 用户空间: {
-  Submission Queue: "SQ\n提交队列" {
-    style.fill: "#e4ecfa"
+  label: 用户空间
+  style.fill: "#EEF1F8"
+  app: 应用程序\n发起 / 收割 I/O {
+    style.fill: "#FFFFFF"
   }
-  Completion Queue: "CQ\n完成队列" {
-    style.fill: "#e4fae4"
+}
+
+共享内存: {
+  label: 共享内存环形缓冲区
+  style.fill: "#E3E9FD"
+  SQ: "SQ\n提交队列" {
+    style.fill: "#FFFFFF"
+  }
+  CQ: "CQ\n完成队列" {
+    style.fill: "#FFFFFF"
   }
 }
 
 内核空间: {
-  io_uring 实例: "异步 I/O 引擎" {
-    style.fill: "#e8ecf1"
+  label: 内核空间
+  style.fill: "#EEF1F8"
+  engine: 内核异步 I/O 引擎 {
+    style.fill: "#FFFFFF"
   }
 }
 
-Submission Queue <-> io_uring 实例: 共享内存 {
-  style.stroke-dash: 3
-}
-Completion Queue <-> io_uring 实例: 共享内存 {
-  style.stroke-dash: 3
-}
+用户空间.app -> 共享内存.SQ: 提交 SQE\n无需系统调用
+共享内存.SQ -> 内核空间.engine: 内核取出 SQE 执行
+内核空间.engine -> 共享内存.CQ: 完成写入 CQE
+共享内存.CQ -> 用户空间.app: 应用收割 CQE

@@ -1,9 +1,11 @@
-# AIO 异步 I/O 时序
+# POSIX AIO 异步 I/O 时序
 shape: sequence_diagram
 
-应用程序 -> 内核: read() 发起异步读取
-应用程序: 立即返回 (线程不阻塞)
-内核: 等待网络数据到达
-内核: DMA 拷贝到用户空间
-内核 -> 应用程序: CompletionHandler.completed()
-应用程序: 拿到结果, 处理数据
+应用程序 -> glibc: aio_read() 发起「异步」I/O
+应用程序.return: 立即返回，线程不阻塞
+glibc.pool: 用户态线程池开一个线程，执行阻塞 read()
+glibc -> 内核: read() 阻塞等待数据
+内核.arrive: 数据到达，拷贝到用户空间
+内核 -> glibc: read() 返回
+glibc -> 应用程序: sigevent 回调：I/O 完成
+应用程序.done: 拿到结果并处理
