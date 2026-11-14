@@ -180,4 +180,4 @@ Agent ⇄ Environment
 
 ---
 
-*下一篇：[第 2 章 上下文工程](https://zhleeo.github.io/zlab/)*
+*下一篇：[第 2 章 上下文工程](../02-context-engineering/)*
