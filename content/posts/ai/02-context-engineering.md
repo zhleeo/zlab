@@ -129,7 +129,7 @@ def build_context(stable_prefix, trajectory, status_bar=None):
     context = list(stable_prefix)          # [system, tools...] 静态、可缓存
     context += trajectory                   # 历史消息（只增不改）
     if status_bar is not None:
-*下一篇：[第 3 章 用户记忆和知识库](../03-memory-and-rag.md)*
+        context += status_bar
     return context
 
 # 反模式：把新工具 schema 插回前缀，会作废后续全部缓存
@@ -164,4 +164,4 @@ def build_context(stable_prefix, trajectory, status_bar=None):
 
 ---
 
-*下一篇：[第 3 章 用户记忆和知识库](../02-context-engineering/)*
+*下一篇：[第 3 章 用户记忆和知识库](../03-memory-and-rag/)*
