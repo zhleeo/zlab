@@ -1,0 +1,26 @@
+direction: down
+
+app: "应用进程（用户态）" {
+  style.fill: "#e3f2fd"
+  style.stroke: "#64b5f6"
+}
+
+snd: "发送缓冲区（SO_SNDBUF）" {
+  style.fill: "#c8e6c9"
+  style.stroke: "#66bb6a"
+}
+
+rcv: "接收缓冲区（SO_RCVBUF）" {
+  style.fill: "#c8e6c9"
+  style.stroke: "#66bb6a"
+}
+
+net: "网卡 → 网络" {
+  style.fill: "#fff8e1"
+  style.stroke: "#ffca28"
+}
+
+app -> snd: "write(\"hello\")"
+snd -> net: "内核按滑动窗口 + 拥塞控制发包"
+net -> rcv: "内核协议栈校验、排序后放入"
+rcv -> app: "read(buf)"

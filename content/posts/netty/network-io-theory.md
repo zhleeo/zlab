@@ -4,12 +4,12 @@ draft: false
 title: 'I/O 基础理论：两阶段模型与同步异步'
 categories: ['技术']
 tags: ['Netty', 'NIO', '虚拟线程', 'IO']
-weight: 2
+weight: 3
 ---
 
 你的代码调用 `read()` 的时候，CPU 在执行什么、线程在等什么、数据又从哪搬到哪——这三个问题不搞清楚，BIO、NIO、io_uring 学到最后全变成背 API。这一篇从内核的角度把 I/O 的基本概念拆干净：数据路径、两阶段模型、阻塞 vs 非阻塞、同步 vs 异步，然后把两根轴叠回时间线看三种模型实际怎么跑，讨论为什么同步非阻塞统治了二十年，最后讲虚拟线程把哪一环改了、哪一环没动。
 
-> 前置阅读：[网络通信基础]({{< ref "/posts/netty/network-explanation" >}}) — 建议先了解 TCP/IP 分层、Socket 系统调用和 TCP 连接状态后再读本篇，否则部分概念缺少上下文。
+> 前置阅读：[Socket 详解]({{< ref "/posts/netty/socket-internals" >}}) — 建议先了解 Socket 的内核对象模型、收发缓冲区和常用选项后再读本篇，否则部分概念缺少上下文。
 
 ---
 

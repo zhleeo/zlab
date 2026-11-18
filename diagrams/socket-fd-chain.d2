@@ -1,0 +1,25 @@
+direction: down
+
+fd: "进程 fd 表\nfd=7 只是一个整数下标" {
+  style.fill: "#e3f2fd"
+  style.stroke: "#64b5f6"
+}
+
+file: "struct file\n通用文件抽象（read / write / poll）" {
+  style.fill: "#e3f2fd"
+  style.stroke: "#64b5f6"
+}
+
+socket: "struct socket（通用层）\n协议族、类型、操作函数表" {
+  style.fill: "#c8e6c9"
+  style.stroke: "#66bb6a"
+}
+
+sock: "struct sock（协议层）\nTCP 对应 tcp_sock\n缓冲区、状态机、拥塞控制" {
+  style.fill: "#fff8e1"
+  style.stroke: "#ffca28"
+}
+
+fd -> file: "fd 下标定位"
+file -> socket: "private_data 指针"
+socket -> sock: "sk 指针"

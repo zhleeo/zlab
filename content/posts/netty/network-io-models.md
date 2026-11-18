@@ -4,7 +4,7 @@ draft: false
 title: 'I/O 模型原理：BIO、epoll 与 io_uring'
 categories: ['技术']
 tags: ['Netty', 'NIO', 'epoll', 'io_uring', 'IO']
-weight: 3
+weight: 4
 ---
 
 上一篇把 I/O 拆成了两阶段——阶段一「等数据」、阶段二「拷数据」，再叠加阻塞/非阻塞、同步/异步两个正交维度。这一篇把这些抽象概念收回来，落到三个具体的模型上看它们怎么跑：BIO 为什么一个连接一个线程、epoll 凭什么一个线程管一万连接、io_uring 又在阶段二上动了什么手脚。更重要的是，这些模型不是纸面概念——BIO 有 `strace` 里看得见的阻塞，epoll 有空轮询的坑，Linux AIO 干脆是个反面教材。看完这一篇，再回头对着 `strace` 的输出，你大概就能判断自己跑的是哪种 I/O，以及它为什么会卡、会空转、会踩坑。
